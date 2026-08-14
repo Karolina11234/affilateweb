@@ -1,0 +1,1140 @@
+/*
+-----------------------------------------------
+Blogger Template Style
+Name:        WayToBuy - Modern Retro
+Designer:    WayToBuy
+URL:         waytobuy.cz
+----------------------------------------------- */
+
+/* Variable definitions
+====================
+<Variable name="bg.color" description="Pozadi" type="color" default="#faf6ec" value="#faf6ec"/>
+<Variable name="ink.color" description="Hlavni text" type="color" default="#1a1a26" value="#1a1a26"/>
+<Variable name="sage.color" description="Sage" type="color" default="#b8c89a" value="#b8c89a"/>
+<Variable name="butter.color" description="Butter" type="color" default="#f4d56b" value="#f4d56b"/>
+<Variable name="blue.color" description="Blue" type="color" default="#a8c2d1" value="#a8c2d1"/>
+<Variable name="coral.color" description="Coral" type="color" default="#f0a89a" value="#f0a89a"/>
+<Variable name="terracotta.color" description="Terracotta" type="color" default="#c25a3c" value="#c25a3c"/>
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600;1,9..144,700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Caveat:wght@500;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; overflow-x: hidden; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  color: #1a1a26;
+  background: #faf6ec;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600; line-height: 1.05;
+  letter-spacing: -0.02em; color: #1a1a26;
+  margin: 0 0 .6em;
+}
+p { margin: 0 0 1rem; }
+a { color: inherit; text-decoration: none; transition: opacity .25s ease; }
+a:hover { opacity: .7; }
+img { max-width: 100%; height: auto; display: block; border-radius: 18px; }
+
+.wtb-container { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+
+/* === ANNOUNCE / MARQUEE === */
+.wtb-announce {
+  background: #b8c89a; color: #1a1a26;
+  padding: 11px 0; overflow: hidden; white-space: nowrap;
+  border-bottom: 1px solid #1a1a26;
+}
+.wtb-marquee {
+  display: inline-block;
+  animation: wtb-scroll 38s linear infinite;
+  font-size: .82rem; letter-spacing: .22em;
+  text-transform: uppercase; font-weight: 500;
+}
+.wtb-marquee span { padding-right: 60px; }
+@keyframes wtb-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* === HEADER === */
+.wtb-header {
+  background: #faf6ec;
+  border-bottom: 1px solid #1a1a26;
+  position: sticky; top: 0; z-index: 50;
+}
+.wtb-header-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 28px; gap: 24px; flex-wrap: wrap;
+}
+.wtb-logo {
+  font-family: 'Fraunces', serif;
+  font-weight: 800; font-size: 1.9rem;
+  letter-spacing: -.04em; color: #1a1a26;
+}
+.wtb-logo-dot { color: #c25a3c; }
+.wtb-nav { display: flex; gap: 28px; flex-wrap: wrap; }
+.wtb-nav a {
+  font-size: .9rem; font-weight: 500; color: #1a1a26;
+}
+.wtb-nav a:hover { color: #c25a3c; opacity: 1; }
+.wtb-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fbf7ee; color: #1a1a26;
+  border: 1px solid #1a1a26;
+  padding: 10px 20px; border-radius: 999px;
+  font-size: .86rem; font-weight: 600;
+  transition: all .25s ease;
+}
+.wtb-cta:hover { background: #1a1a26; color: #faf6ec; opacity: 1; }
+.wtb-cta-dot { width: 8px; height: 8px; border-radius: 50%; background: #f0a89a; }
+.wtb-cta:hover .wtb-cta-dot { background: #f4d56b; }
+@media (max-width: 880px) {
+  .wtb-nav { display: none; }
+  .wtb-header-row { padding: 14px 20px; }
+}
+
+/* === HAMBURGER MENU === */
+.wtb-hamburger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer;
+  padding: 6px; z-index: 200;
+}
+.wtb-hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: #1a1a26; border-radius: 2px;
+  transition: all .3s ease;
+}
+.wtb-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.wtb-hamburger.open span:nth-child(2) { opacity: 0; }
+.wtb-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.wtb-mobile-nav {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: #fbf7ee; z-index: 150;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 32px;
+}
+.wtb-mobile-nav.open { display: flex; }
+.wtb-mobile-nav a {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem; font-weight: 600;
+  color: #1a1a26; text-decoration: none;
+  letter-spacing: -.02em;
+  transition: color .2s ease;
+}
+.wtb-mobile-nav a:hover { color: #c25a3c; }
+.wtb-mobile-nav .wtb-mobile-close {
+  position: absolute; top: 24px; right: 24px;
+  font-size: 1.5rem; background: none; border: none;
+  cursor: pointer; color: #1a1a26; font-family: 'DM Sans', sans-serif;
+}
+
+@media (max-width: 880px) {
+  .wtb-hamburger { display: flex; }
+  .wtb-cta { display: none; }
+}
+
+/* === HERO === */
+.wtb-hero {
+  position: relative; padding: 90px 0 100px;
+  border-bottom: 1px solid #1a1a26;
+  background-image:
+    linear-gradient(rgba(26,26,38,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,26,38,.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-color: #faf6ec;
+}
+.wtb-hero-inner { position: relative; z-index: 2; text-align: center; }
+.wtb-hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  padding: 9px 20px; border-radius: 999px;
+  font-size: .76rem; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.wtb-hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #c25a3c; display: inline-block; }
+.wtb-hero-title {
+  font-family: 'Fraunces', serif; font-weight: 600;
+  font-size: 72px; line-height: .98;
+  letter-spacing: -.04em; margin-bottom: 28px;
+}
+.wtb-hero-title .line { display: block; }
+.wtb-hero-title .highlight {
+  background: #f4d56b; padding: 0 16px; border-radius: 8px;
+  display: inline-block; box-shadow: 4px 4px 0 #1a1a26;
+  transform: rotate(-1deg); margin: 6px 0;
+}
+.wtb-hero-title em { font-style: italic; color: #c25a3c; font-weight: 500; }
+.wtb-hero-title .tilted {
+  font-family: 'Caveat', cursive; font-size: 36px;
+  color: #8a9e6e; font-weight: 700; letter-spacing: 0;
+  margin-top: 14px; transform: rotate(-2deg); display: inline-block;
+}
+.wtb-hero-sub {
+  max-width: 580px; margin: 0 auto 36px;
+  font-size: 1.1rem; color: #4a4a5e;
+}
+.wtb-hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.wtb-btn-dark, .wtb-btn-light {
+  display: inline-block; padding: 16px 32px;
+  border-radius: 999px; font-family: 'DM Sans', sans-serif;
+  font-size: .92rem; font-weight: 600;
+  border: 1px solid #1a1a26;
+  transition: all .3s ease; cursor: pointer;
+}
+.wtb-btn-dark { background: #1a1a26; color: #fbf7ee; }
+.wtb-btn-dark:hover { background: #c25a3c; border-color: #c25a3c; opacity: 1; }
+.wtb-btn-light { background: #fbf7ee; color: #1a1a26; }
+.wtb-btn-light:hover { background: #f4d56b; opacity: 1; }
+
+.wtb-float {
+  position: absolute; font-family: 'Fraunces', serif;
+  pointer-events: none; z-index: 1; opacity: .9;
+}
+.wtb-float-1 { top: 12%; left: 8%; color: #c25a3c; font-size: 3rem; }
+.wtb-float-2 { top: 22%; right: 12%; color: #8a9e6e; font-size: 3.6rem; }
+.wtb-float-3 { bottom: 18%; left: 14%; color: #d97f6d; font-size: 2.8rem; }
+.wtb-float-4 { bottom: 12%; right: 9%; color: #7da0b3; font-size: 3.2rem; }
+@media (max-width: 640px) {
+  .wtb-hero-title { font-size: 44px; }
+  .wtb-float { display: none; }
+}
+
+/* === MAIN === */
+.wtb-main {
+  display: block;
+  padding: 80px 0;
+  border-bottom: 1px solid #1a1a26;
+}
+@media (max-width: 980px) { .wtb-main { grid-template-columns: 1fr; gap: 40px; padding: 50px 0; } }
+
+/* === SINGLE ARTICLE – roztažení přes celou šířku === */
+.item-view .wtb-main { padding: 0 !important; border: none !important; }
+.item-view .blog-posts {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 0 !important;
+}
+.item-view .post-outer-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+.item-view .date-posts {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* === SECTION TITLES === */
+.wtb-section-head { text-align: center; margin-bottom: 50px; }
+.wtb-eyebrow {
+  display: inline-block;
+  font-size: .72rem; font-weight: 600;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: #c25a3c; margin-bottom: 14px;
+}
+.wtb-section-title {
+  font-size: 48px; font-weight: 600;
+  line-height: 1; letter-spacing: -.02em;
+}
+.wtb-section-title em { font-style: italic; color: #c25a3c; font-weight: 500; }
+@media (max-width: 640px) { .wtb-section-title { font-size: 32px; } }
+
+/* === POST CARDS (Blog widget) === */
+.blog-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+.date-header, .date-outer h2 { display: none !important; }
+.date-outer { margin: 0 !important; padding: 0 !important; border: 0 !important; }
+.post-outer-container, .date-posts { background: transparent !important; border: 0 !important; padding: 0 !important; margin: 0 !important; }
+.date-posts { display: contents !important; }
+.post-outer-container { height: 100%; display: flex; flex-direction: column; }
+
+/* Each post-outer gets random color via nth-child */
+.post-outer {
+  border: 1px solid #1a1a26;
+  border-radius: 22px;
+  padding: 0 !important; margin: 0 !important;
+  display: flex; flex-direction: column; height: 100%;
+  transition: transform .3s ease, box-shadow .3s ease;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.post-outer:hover { transform: translateY(-4px); box-shadow: 6px 6px 0 #1a1a26; }
+.post-outer:nth-child(6n+1) { background: #b8c89a; }
+.post-outer:nth-child(6n+2) { background: #f4d56b; }
+.post-outer:nth-child(6n+3) { background: #a8c2d1; }
+.post-outer:nth-child(6n+4) { background: #f0a89a; }
+.post-outer:nth-child(6n+5) { background: #fbf7ee; }
+.post-outer:nth-child(6n+6) { background: #c25a3c; color: #fbf7ee; }
+.post-outer:nth-child(6n+6) a, .post-outer:nth-child(6n+6) .post-title a { color: #fbf7ee; }
+.post-outer:nth-child(6n+6) .jump-link a { background: #fbf7ee; color: #1a1a26; }
+.post { padding: 0; background: transparent; }
+.post-thumbnail {
+  width: 100%; aspect-ratio: 4/3; display: block; overflow: hidden;
+  margin: 0; border-radius: 0;
+  border-bottom: 1px solid #1a1a26;
+}
+.post-thumbnail img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 0; transition: transform .8s ease;
+}
+.post-outer:hover .post-thumbnail img { transform: scale(1.06); }
+.post-header { padding: 22px 22px 0; }
+.post-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem; font-weight: 600;
+  letter-spacing: -.02em; line-height: 1.2;
+  margin: 0 0 10px;
+}
+.post-title a { color: #1a1a26; }
+.post-body, .post-snippet {
+  padding: 0 22px; color: rgba(26,26,38,.75);
+  font-size: .92rem;
+}
+.post-outer:nth-child(6n+6) .post-body,
+.post-outer:nth-child(6n+6) .post-snippet { color: rgba(251,247,238,.85); }
+.post-footer {
+  padding: 14px 22px 20px; margin-top: 14px;
+  border-top: 1px solid rgba(26,26,38,.15);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .76rem; letter-spacing: .04em;
+}
+.post-outer:nth-child(6n+6) .post-footer { border-top-color: rgba(251,247,238,.2); }
+.post-footer a {
+  background: #1a1a26; color: #fbf7ee;
+  padding: 7px 14px; border-radius: 999px;
+  font-size: .7rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.post-footer a:hover { background: #c25a3c; opacity: 1; }
+.jump-link { padding: 0 22px 18px; margin-top: 8px; }
+.jump-link a {
+  display: inline-block; background: #1a1a26; color: #fbf7ee;
+  padding: 9px 18px; border-radius: 999px;
+  font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+}
+
+/* === DLAŽDICE KARET (wtb-card) === */
+.wtb-card-thumb {
+  display: block; width: 100%; aspect-ratio: 4/3;
+  overflow: hidden; border-bottom: 1px solid #1a1a26;
+  background: rgba(26,26,38,.08);
+  text-decoration: none;
+  display: flex; align-items: center; justify-content: center;
+}
+.wtb-card-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .8s ease; display: block;
+}
+.post-outer:hover .wtb-card-thumb img { transform: scale(1.06); }
+.wtb-card-thumb-icon {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem; color: #1a1a26; opacity: 0.3;
+}
+.wtb-card-body {
+  padding: 20px 22px 22px;
+  display: flex; flex-direction: column; flex: 1;
+}
+.wtb-card-cat {
+  font-size: .68rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: #c25a3c; margin-bottom: 8px; display: block;
+}
+.post-outer:nth-child(6n+6) .wtb-card-cat { color: #f4d56b; }
+.wtb-card-title {
+  font-family: 'Fraunces', serif; font-weight: 600;
+  font-size: 1.25rem; letter-spacing: -.02em;
+  line-height: 1.2; margin: 0 0 10px;
+}
+.wtb-card-title a {
+  color: #1a1a26; text-decoration: none;
+  transition: color .2s ease;
+}
+.wtb-card-title a:hover { color: #c25a3c; }
+.post-outer:nth-child(6n+6) .wtb-card-title a { color: #fbf7ee; }
+.wtb-card-excerpt {
+  font-size: .88rem; color: rgba(26,26,38,.7);
+  margin: 0 0 16px; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.post-outer:nth-child(6n+6) .wtb-card-excerpt { color: rgba(251,247,238,.8); }
+.wtb-card-meta {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 10px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(26,26,38,.12);
+}
+.post-outer:nth-child(6n+6) .wtb-card-meta { border-top-color: rgba(251,247,238,.2); }
+.wtb-card-date {
+  font-size: .75rem; color: rgba(26,26,38,.5);
+  font-style: italic; font-family: 'Fraunces', serif;
+}
+.post-outer:nth-child(6n+6) .wtb-card-date { color: rgba(251,247,238,.6); }
+.wtb-card-link {
+  font-size: .72rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: #1a1a26; text-decoration: none;
+  background: transparent;
+  padding: 6px 14px; border-radius: 999px;
+  border: 1px solid #1a1a26;
+  transition: all .2s ease; white-space: nowrap;
+}
+.wtb-card-link:hover { background: #1a1a26; color: #fbf7ee; }
+.post-outer:nth-child(6n+6) .wtb-card-link {
+  color: #fbf7ee; border-color: #fbf7ee;
+}
+.post-outer:nth-child(6n+6) .wtb-card-link:hover {
+  background: #fbf7ee; color: #1a1a26;
+}
+
+/* === SIDEBAR === */
+.wtb-sidebar { display: flex; flex-direction: column; gap: 22px; }
+/* Sidebar skrytý všude — zobrazuje se jen u článků přes wtb-article-layout */
+body:not(.item-view) .wtb-sidebar { display: none !important; }
+.item-view .wtb-sidebar { display: none !important; }
+.wtb-sidebar .widget {
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 22px; padding: 26px;
+  margin: 0;
+}
+.wtb-sidebar .widget h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem; font-weight: 600;
+  letter-spacing: -.02em;
+  margin: 0 0 16px; padding-bottom: 12px;
+  border-bottom: 1px solid #1a1a26;
+}
+.wtb-sidebar .widget ul { list-style: none; margin: 0; padding: 0; }
+.wtb-sidebar .widget li {
+  padding: 8px 0; font-size: .92rem;
+  border-bottom: 1px dashed rgba(26,26,38,.15);
+}
+.wtb-sidebar .widget li:last-child { border: 0; }
+.wtb-sidebar .widget a { color: #1a1a26; font-weight: 500; }
+.wtb-sidebar .widget a:hover { color: #c25a3c; opacity: 1; }
+.wtb-about-widget {
+  background: #1a1a26 !important; color: #fbf7ee !important;
+}
+.wtb-about-widget h2 { color: #fbf7ee !important; border-bottom-color: rgba(251,247,238,.2) !important; }
+.wtb-about-widget p { color: rgba(251,247,238,.8); font-size: .92rem; margin: 0; }
+
+/* === SINGLE POST VIEW === */
+.item-view .post-outer {
+  background: #fbf7ee !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 40px 0 !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+.item-view .post { width: 100%; }
+
+/* === STATIC PAGE VIEW === */
+.page-view .blog-posts {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 0 !important;
+}
+.page-view .post-outer {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.page-view .post-outer:hover { transform: none !important; }
+.page-view .post-outer:nth-child(n) { background: transparent !important; }
+.page-view .post-outer-container,
+.page-view .date-posts {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+.page-view .post-title,
+.page-view .post-footer { display: none !important; }
+.page-view .post-body { padding: 0 !important; }
+.item-view .post-outer:hover { transform: none; box-shadow: none; }
+.item-view .post-outer:nth-child(n) { background: #fbf7ee; color: #1a1a26; }
+.item-view .post-thumbnail {
+  aspect-ratio: auto; border: 0; margin-bottom: 30px; border-radius: 18px;
+}
+.item-view .post-thumbnail img { border-radius: 18px; height: auto; max-height: 480px; width: 100%; object-fit: cover; }
+.item-view .post-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  text-align: center; margin: 0 0 36px;
+  font-weight: 600; letter-spacing: -.03em;
+  line-height: 1.15; color: #1a1a26;
+}
+.item-view .post-body {
+  padding: 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.06rem;
+  line-height: 1.85; color: #1a1a26;
+}
+.item-view .post-body p {
+  margin-bottom: 1.4rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.06rem; color: #1a1a26;
+  line-height: 1.85;
+}
+/* Přepíše inline styly z AI generátoru */
+.item-view .post-body p[style] {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 1.06rem !important;
+  color: #1a1a26 !important;
+  line-height: 1.85 !important;
+}
+.item-view .post-body h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  font-weight: 600; letter-spacing: -.02em;
+  margin-top: 2.5rem; margin-bottom: .8rem;
+  color: #1a1a26;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(26,26,38,.1);
+}
+.item-view .post-body h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+
+/* Červený titulek z AI generátoru */
+.item-view .post-body p[style*="d9534f"] {
+  font-family: 'Fraunces', serif !important;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem) !important;
+  color: #d9534f !important;
+  font-weight: 600 !important;
+  letter-spacing: -.02em !important;
+  text-align: center !important;
+  margin-bottom: 1rem !important;
+  line-height: 1.2 !important;
+}
+
+/* Obrázky v článku */
+.item-view .post-body img {
+  margin: 1.5rem auto;
+  display: block;
+  max-width: min(420px, 100%);
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(26,26,38,.08);
+}
+
+/* Oddělovač */
+.item-view .post-body hr {
+  border: none;
+  height: 1px;
+  background: rgba(26,26,38,.1);
+  margin: 2.5rem 0;
+}
+
+/* Tlačítko DO OBCHODU */
+.item-view .post-body a[style*="border-radius:999px"] {
+  font-family: 'DM Sans', sans-serif !important;
+  letter-spacing: .08em !important;
+  transition: opacity .2s !important;
+}
+.item-view .post-body a[style*="border-radius:999px"]:hover {
+  opacity: .85 !important;
+}
+
+.item-view .post-body blockquote {
+  border-left: 4px solid #c25a3c;
+  background: rgba(26,26,38,.04);
+  border-radius: 0 18px 18px 0;
+  padding: 22px 28px; margin: 2rem 0;
+  font-family: 'Fraunces', serif;
+  font-style: italic; font-size: 1.1rem;
+  color: #1a1a26;
+}
+.item-view .post-footer {
+  border-top: 1px solid rgba(26,26,38,.15);
+  padding: 20px 0 0; margin-top: 2rem;
+  display: block; text-align: center;
+}
+
+/* === LAYOUT ČLÁNKU: obsah + sidebar === */
+.wtb-article-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 40px;
+  align-items: start;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 28px;
+  box-sizing: border-box;
+}
+@media (max-width: 900px) {
+  .wtb-article-layout { grid-template-columns: 1fr; }
+  .wtb-article-sidebar { display: none; }
+}
+
+/* Sidebar s dalšími články */
+.wtb-article-sidebar {
+  position: sticky;
+  top: 100px;
+  padding-top: 40px;
+}
+.wtb-article-sidebar h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #1a1a26;
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #1a1a26;
+}
+.wtb-sidebar-post {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid rgba(26,26,38,.1);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: #1a1a26;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.wtb-sidebar-post:hover {
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 0 rgba(26,26,38,.12);
+}
+.wtb-sidebar-post img {
+  width: 100%; height: 160px;
+  object-fit: cover;
+  border-radius: 0;
+  margin: 0;
+  box-shadow: none;
+}
+.wtb-sidebar-post-body {
+  padding: 14px 16px 16px;
+}
+.wtb-sidebar-post-cat {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #c25a3c;
+  margin-bottom: 6px;
+  display: block;
+}
+.wtb-sidebar-post-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #1a1a26;
+  margin: 0;
+}
+.post-labels a {
+  display: inline-block; background: #f4d56b; color: #1a1a26;
+  padding: 6px 14px; border-radius: 999px; font-size: .7rem;
+  letter-spacing: .12em; text-transform: uppercase; font-weight: 600;
+  margin: 3px; border: 1px solid #1a1a26;
+}
+.post-labels a:hover { background: #c25a3c; color: #fbf7ee; opacity: 1; }
+
+/* === COMMENTS === */
+#comments, .comments {
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 22px; padding: 36px; margin-top: 30px;
+}
+#comments h4, .comments h4 {
+  font-family: 'Fraunces', serif; font-size: 1.4rem;
+  margin: 0 0 20px; text-align: center;
+}
+/* Schovat komentáře úplně všude */
+#comments, .comments { display: none !important; }
+.page-view #comments,
+.page-view .comments { display: none !important; }
+.item-view #comments,
+.item-view .comments { display: none !important; }
+
+/* Lépe stylizovaný comment form */
+.comment-form { margin-top: 10px; }
+.comment-form h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem; color: #4a4a5e;
+  font-weight: 400; font-style: italic;
+  margin-bottom: 16px !important;
+}
+.blogger-iframe-colorize { border-radius: 12px !important; }
+
+/* === PAGINATION === */
+#blog-pager {
+  text-align: center; margin: 50px 0; clear: both;
+}
+#blog-pager a {
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  padding: 12px 24px; border-radius: 999px;
+  color: #1a1a26; margin: 4px;
+  display: inline-block; font-size: .82rem;
+  font-weight: 600; letter-spacing: .04em;
+}
+#blog-pager a:hover { background: #f4d56b; opacity: 1; }
+
+/* === STATIC PAGES STYLING === */
+.wtb-page-hero {
+  text-align: center; padding: 70px 30px;
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 28px; margin-bottom: 50px;
+  position: relative; overflow: hidden;
+}
+.wtb-page-hero::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(26,26,38,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,26,38,.04) 1px, transparent 1px);
+  background-size: 24px 24px; z-index: 1;
+}
+.wtb-page-hero > * { position: relative; z-index: 2; }
+.wtb-page-hero .tag {
+  display: inline-block; font-size: .72rem;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: #c25a3c; background: #faf6ec;
+  border: 1px solid #1a1a26; padding: 8px 20px;
+  border-radius: 999px; margin-bottom: 22px; font-weight: 600;
+}
+.wtb-page-hero h1 {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 600; line-height: 1; letter-spacing: -.03em;
+  margin: 0 0 14px;
+}
+.wtb-page-hero h1 em { font-style: italic; color: #c25a3c; }
+.wtb-page-hero h1 .highlight {
+  background: #f4d56b; padding: 0 12px; border-radius: 6px;
+  display: inline-block; box-shadow: 3px 3px 0 #1a1a26;
+  transform: rotate(-1deg); margin: 4px 0;
+}
+.wtb-page-hero p { color: #4a4a5e; max-width: 560px; margin: 14px auto 0; font-size: 1.05rem; }
+
+/* Coupon cards (Kupóny stránka) */
+.wtb-coupon-grid {
+  display: grid; gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-bottom: 40px;
+}
+.wtb-coupon {
+  border: 1px solid #1a1a26; border-radius: 22px;
+  padding: 26px; position: relative;
+  transition: all .3s ease; min-height: 220px;
+  display: flex; flex-direction: column;
+}
+.wtb-coupon:hover { transform: translateY(-4px); box-shadow: 6px 6px 0 #1a1a26; }
+.wtb-coupon-sage { background: #b8c89a; }
+.wtb-coupon-butter { background: #f4d56b; }
+.wtb-coupon-blue { background: #a8c2d1; }
+.wtb-coupon-coral { background: #f0a89a; }
+.wtb-coupon-terracotta { background: #c25a3c; color: #fbf7ee; }
+.wtb-coupon-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.wtb-coupon-brand {
+  font-family: 'DM Sans', sans-serif; font-weight: 700;
+  font-size: .82rem; letter-spacing: .14em; text-transform: uppercase;
+}
+.wtb-coupon-fav {
+  width: 30px; height: 30px; background: rgba(255,255,255,.5);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.wtb-coupon-terracotta .wtb-coupon-fav { background: rgba(255,255,255,.2); }
+.wtb-coupon-discount {
+  font-family: 'Fraunces', serif; font-weight: 700;
+  font-size: 4rem; line-height: 1; letter-spacing: -.04em;
+  flex: 1; display: flex; align-items: center;
+}
+.wtb-coupon-discount .minus { font-weight: 400; margin-right: 4px; }
+.wtb-coupon-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-top: auto;
+}
+.wtb-coupon-until { font-size: .74rem; letter-spacing: .04em; opacity: .8; }
+.wtb-coupon-copy {
+  background: #1a1a26; color: #fbf7ee; border: 0; cursor: pointer;
+  padding: 10px 18px; border-radius: 999px;
+  font-family: 'DM Sans', sans-serif; font-size: .85rem;
+  font-weight: 700; letter-spacing: .12em;
+  transition: all .25s ease;
+}
+.wtb-coupon-copy.copied { background: #b8c89a; color: #1a1a26; }
+.wtb-coupon-terracotta .wtb-coupon-copy { background: #fbf7ee; color: #1a1a26; }
+.wtb-coupon-copy:hover { transform: scale(1.05); }
+.wtb-disclaimer {
+  text-align: center; font-size: .9rem; color: #4a4a5e;
+  max-width: 640px; margin: 40px auto 0; padding: 20px;
+  border-top: 1px dashed #1a1a26;
+}
+
+/* About page */
+.wtb-about-card {
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 28px; padding: 56px 44px;
+  text-align: center; margin-bottom: 30px;
+}
+.wtb-about-avatar {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: #f4d56b; border: 1px solid #1a1a26;
+  margin: 0 auto 22px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 700; color: #1a1a26;
+}
+.wtb-about-card h2 {
+  font-size: 2rem; margin: 0 0 16px;
+}
+.wtb-about-card h2 em { font-style: italic; color: #c25a3c; }
+.wtb-about-card p { color: #4a4a5e; font-size: 1.05rem; max-width: 580px; margin: 0 auto 14px; }
+.wtb-values {
+  display: grid; gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 40px;
+}
+.wtb-value {
+  border: 1px solid #1a1a26; border-radius: 22px;
+  padding: 32px 26px; text-align: left;
+  transition: all .3s ease;
+}
+.wtb-value:hover { transform: translateY(-4px); box-shadow: 5px 5px 0 #1a1a26; }
+.wtb-value-sage { background: #b8c89a; }
+.wtb-value-butter { background: #f4d56b; }
+.wtb-value-blue { background: #a8c2d1; }
+.wtb-value .ico {
+  font-family: 'Fraunces', serif; font-size: 2.6rem;
+  line-height: 1; display: block; margin-bottom: 10px;
+}
+.wtb-value h3 { font-size: 1.4rem; margin: 0 0 8px; letter-spacing: -.02em; }
+.wtb-value p { font-size: .92rem; color: rgba(26,26,38,.75); margin: 0; }
+.wtb-quote {
+  text-align: center; padding: 40px 30px;
+  background: #1a1a26; color: #fbf7ee;
+  border-radius: 28px; border: 1px solid #1a1a26;
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 1.4rem; max-width: 720px; margin: 0 auto;
+}
+.wtb-quote em { color: #f4d56b; font-style: italic; }
+
+/* Contact page */
+.wtb-contact-grid {
+  display: grid; gap: 30px;
+  grid-template-columns: 1fr 1.3fr;
+}
+@media (max-width: 780px) { .wtb-contact-grid { grid-template-columns: 1fr; } }
+.wtb-contact-info {
+  background: #b8c89a; border: 1px solid #1a1a26;
+  border-radius: 22px; padding: 36px 30px;
+}
+.wtb-contact-info h2 { font-size: 1.6rem; margin: 0 0 8px; }
+.wtb-contact-info h2 em { font-style: italic; color: #c25a3c; }
+.wtb-contact-info > p { font-size: .95rem; margin-bottom: 22px; color: rgba(26,26,38,.75); }
+.wtb-contact-item { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
+.wtb-contact-item .ico {
+  flex-shrink: 0; width: 40px; height: 40px;
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 600;
+}
+.wtb-contact-item h4 {
+  font-family: 'DM Sans', sans-serif; font-size: .72rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(26,26,38,.7); margin: 0 0 3px; font-weight: 600;
+}
+.wtb-contact-item p, .wtb-contact-item a {
+  margin: 0; font-size: .96rem; color: #1a1a26; font-weight: 500;
+}
+.wtb-contact-form {
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 22px; padding: 40px 36px;
+}
+.wtb-contact-form h2 { font-size: 1.7rem; margin: 0 0 6px; text-align: center; }
+.wtb-contact-form .sub {
+  text-align: center; color: #4a4a5e;
+  margin-bottom: 26px; font-size: .92rem;
+}
+.wtb-contact-form label {
+  display: block; font-family: 'DM Sans', sans-serif;
+  font-size: .72rem; letter-spacing: .2em;
+  text-transform: uppercase; color: #4a4a5e;
+  margin: 14px 0 6px; font-weight: 600;
+}
+.wtb-contact-form input,
+.wtb-contact-form textarea {
+  width: 100%; padding: 13px 16px;
+  border: 1px solid #1a1a26; background: #faf6ec;
+  border-radius: 14px; font-family: 'DM Sans', sans-serif;
+  font-size: .95rem; color: #1a1a26;
+  outline: none; transition: all .3s ease;
+}
+.wtb-contact-form input:focus, .wtb-contact-form textarea:focus {
+  background: #fbf7ee; box-shadow: 0 0 0 3px rgba(244,213,107,.4);
+}
+.wtb-contact-form textarea { min-height: 130px; resize: vertical; font-family: 'DM Sans', sans-serif; }
+.wtb-contact-form button {
+  width: 100%; margin-top: 20px;
+  background: #1a1a26; color: #fbf7ee;
+  border: 1px solid #1a1a26; cursor: pointer;
+  padding: 15px; border-radius: 999px;
+  font-family: 'DM Sans', sans-serif; font-size: .85rem;
+  font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  transition: all .3s ease;
+}
+.wtb-contact-form button:hover { background: #c25a3c; border-color: #c25a3c; }
+.wtb-success {
+  display: none; background: #b8c89a; color: #1a1a26;
+  border: 1px solid #1a1a26;
+  border-radius: 14px; padding: 14px; text-align: center;
+  margin-top: 16px; font-size: .92rem; font-weight: 500;
+}
+.wtb-success.show { display: block; }
+
+/* Privacy page */
+.wtb-privacy {
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 28px; padding: 54px 44px;
+}
+@media (max-width: 640px) { .wtb-privacy { padding: 32px 24px; } }
+.wtb-privacy h2 {
+  font-size: 1.5rem; margin: 32px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1a1a26;
+}
+.wtb-privacy h2:first-child { margin-top: 0; }
+.wtb-privacy h2 .num {
+  font-family: 'Caveat', cursive; color: #c25a3c;
+  font-size: 1.6em; font-weight: 700; margin-right: 8px;
+}
+.wtb-privacy h3 { font-size: 1.15rem; margin: 18px 0 8px; font-style: italic; }
+.wtb-privacy ul { margin: 0 0 16px; padding-left: 22px; }
+.wtb-privacy li { margin-bottom: 5px; color: #4a4a5e; }
+.wtb-privacy li::marker { color: #c25a3c; }
+.wtb-privacy a { color: #c25a3c; border-bottom: 1px solid #c25a3c; padding-bottom: 1px; }
+.wtb-highlight {
+  background: #f4d56b; border: 1px solid #1a1a26;
+  border-radius: 18px; padding: 22px 26px; margin: 22px 0;
+}
+.wtb-highlight h3 { margin-top: 0; color: #1a1a26; font-style: italic; }
+.wtb-highlight p { color: #1a1a26; }
+
+/* === FOOTER === */
+.wtb-footer {
+  background: #c25a3c; color: #fbf7ee;
+  padding: 70px 0 30px;
+}
+.wtb-footer-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 30px; flex-wrap: wrap;
+  padding-bottom: 40px; margin-bottom: 40px;
+  border-bottom: 1px solid rgba(251,247,238,.3);
+}
+.wtb-footer-cta {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #fbf7ee; font-weight: 600;
+  letter-spacing: -.02em; max-width: 600px; margin: 0;
+}
+.wtb-footer-cta em { font-style: italic; color: #f4d56b; }
+.wtb-footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 40px; margin-bottom: 36px;
+}
+@media (max-width: 780px) { .wtb-footer-grid { grid-template-columns: 1fr 1fr; } }
+.wtb-footer-grid p { font-size: .9rem; opacity: .9; margin-top: 8px; max-width: 240px; }
+.wtb-footer-grid h5 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .76rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: #f4d56b; margin-bottom: 14px;
+}
+.wtb-footer-grid ul { list-style: none; padding: 0; }
+.wtb-footer-grid li { padding: 4px 0; font-size: .92rem; }
+.wtb-footer-grid a:hover { color: #f4d56b; opacity: 1; }
+.wtb-footer-bottom {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(251,247,238,.3);
+  font-size: .82rem; opacity: .85;
+}
+
+/* === HIDE BLOGGER DEFAULTS === */
+.feed-links, .blog-feeds { display: none; }
+.navbar { height: 0 !important; display: none; }
+.post-share-buttons { display: none; }
+.status-msg-wrap {
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 16px; padding: 22px; text-align: center;
+  font-family: 'Fraunces', serif; font-style: italic; color: #1a1a26;
+}
+.body-fauxcolumns, .body-fauxcolumn-outer { display: none !important; }
+
+/* ============================================
+   RESPONZIVITA – MOBIL
+   ============================================ */
+
+/* Tablet (do 900px) – 2 dlaždice vedle sebe */
+@media (max-width: 900px) {
+  .blog-posts {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .wtb-container { padding: 0 18px; }
+  .wtb-main { padding: 40px 0; }
+}
+
+/* Mobil (do 600px) – 1 dlaždice přes celou šířku */
+@media (max-width: 600px) {
+  .blog-posts {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .wtb-container { padding: 0 14px; }
+  .wtb-main { padding: 28px 0; }
+
+  /* Dlaždice na mobilu */
+  .post-outer { border-radius: 16px; }
+  .wtb-card-thumb { aspect-ratio: 16/9; } /* Širší poměr na malém displeji */
+  .wtb-card-body { padding: 16px 18px 18px; }
+  .wtb-card-title { font-size: 1.1rem; }
+  .wtb-card-excerpt { font-size: .85rem; -webkit-line-clamp: 2; }
+  .wtb-card-meta { padding-top: 10px; }
+  .wtb-card-link { font-size: .68rem; padding: 5px 12px; }
+
+  /* Článek na mobilu */
+  .item-view .post-outer {
+    padding: 20px 16px !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  .item-view .post-body { font-size: .97rem; line-height: 1.7; }
+  .item-view .post-body img { margin: 1.2rem auto; border-radius: 10px; }
+  .item-view .post-body h2 { font-size: 1.15rem; margin-top: 1.8rem; }
+  .item-view .post-body a[style*="padding:15px"] {
+    padding: 12px 24px !important;
+    font-size: .8rem !important;
+  }
+
+  /* Hero sekce na mobilu */
+  .wtb-page-hero { padding: 40px 18px 30px; }
+  .wtb-hero-title { font-size: 36px; }
+
+  /* Navigace na mobilu */
+  .wtb-nav-links { gap: 14px; }
+  .wtb-nav-links a { font-size: .78rem; }
+
+  /* Footer na mobilu */
+  .wtb-footer-grid { grid-template-columns: 1fr !important; gap: 28px; }
+}
+
+/* ============================================
+   DOPLŇKOVÉ STYLY PRO STATICKOU VERZI (GitHub Pages)
+   Filtr/vyhledávání/třídění na Články a Kupóny,
+   horizontální pruh kupónů na hlavní stránce,
+   CTA pruh a detail článku.
+============================================ */
+
+/* === FILTER BAR (hledání + třídění) === */
+.wtb-filter-bar {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  align-items: center; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.wtb-search-box {
+  display: flex; align-items: center; gap: 10px;
+  background: #fbf7ee; border: 1px solid #1a1a26;
+  border-radius: 999px; padding: 12px 20px;
+  flex: 1; min-width: 240px; max-width: 420px;
+}
+.wtb-search-box svg { flex-shrink: 0; opacity: .6; }
+.wtb-search-box input {
+  border: 0; background: transparent; outline: none;
+  font-family: 'DM Sans', sans-serif; font-size: .92rem;
+  color: #1a1a26; width: 100%;
+}
+.wtb-sort-select {
+  border: 1px solid #1a1a26; background: #fbf7ee;
+  border-radius: 999px; padding: 12px 20px;
+  font-family: 'DM Sans', sans-serif; font-size: .85rem;
+  font-weight: 600; color: #1a1a26; cursor: pointer; outline: none;
+}
+
+/* === CHIP GROUP (kategorie) === */
+.wtb-chip-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 34px; }
+.wtb-chip {
+  border: 1px solid #1a1a26; background: #fbf7ee; color: #1a1a26;
+  border-radius: 999px; padding: 9px 18px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 600;
+  letter-spacing: .02em; transition: all .2s ease;
+}
+.wtb-chip:hover { transform: translateY(-2px); }
+.wtb-chip.active { background: #1a1a26; color: #fbf7ee; }
+
+.wtb-empty-state {
+  text-align: center; padding: 60px 20px; color: rgba(26,26,38,.6);
+  font-size: .98rem; grid-column: 1 / -1;
+}
+
+/* === COUPON STRIP (vodorovný pruh na hlavní stránce) === */
+.wtb-coupon-strip {
+  display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px;
+  margin-bottom: 10px; scroll-snap-type: x proximity;
+}
+.wtb-coupon-strip .wtb-coupon { min-width: 260px; scroll-snap-align: start; flex-shrink: 0; }
+.wtb-coupon-strip::-webkit-scrollbar { height: 6px; }
+.wtb-coupon-strip::-webkit-scrollbar-thumb { background: #1a1a26; border-radius: 999px; }
+
+/* === CTA BAND (hlavní stránka) === */
+.wtb-cta-band {
+  background: #1a1a26; color: #fbf7ee;
+  border-radius: 28px; padding: 60px 40px; text-align: center;
+  margin: 20px 0 50px;
+}
+.wtb-cta-band h2 { color: #fbf7ee; margin-bottom: 12px; }
+.wtb-cta-band h2 em { color: #f4d56b; font-style: italic; }
+.wtb-cta-band p { color: rgba(251,247,238,.8); max-width: 480px; margin: 0 auto 26px; }
+.wtb-cta-band__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* === ARTICLE DETAIL (clanek.html) === */
+.wtb-post-single {
+  background: #fbf7ee; border: 1px solid #1a1a26; border-radius: 28px;
+  padding: 46px; max-width: 800px; margin: 0 auto 40px;
+}
+.wtb-post-single .wtb-card-cat { margin-bottom: 14px; }
+.wtb-post-single h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 14px; }
+.wtb-post-single .wtb-post-date {
+  font-size: .85rem; color: rgba(26,26,38,.55); font-style: italic;
+  font-family: 'Fraunces', serif; margin-bottom: 28px; display: block;
+}
+.wtb-post-single .wtb-post-thumb {
+  width: 100%; aspect-ratio: 16/9; border-radius: 18px; overflow: hidden;
+  background: rgba(26,26,38,.08); display: flex; align-items: center;
+  justify-content: center; margin-bottom: 30px; border: 1px solid #1a1a26;
+}
+.wtb-post-single .wtb-post-thumb .wtb-card-thumb-icon { font-size: 4rem; }
+.wtb-post-single .wtb-post-body { color: #2c2c3a; font-size: 1rem; }
+.wtb-post-single .wtb-post-body p { margin-bottom: 1.1em; }
+.wtb-post-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .85rem; font-weight: 600; margin-bottom: 26px;
+}
+.wtb-post-back:hover { color: #c25a3c; }
+
+@media (max-width: 640px) {
+  .wtb-filter-bar { flex-direction: column; align-items: stretch; }
+  .wtb-search-box { max-width: none; }
+  .wtb-cta-band { padding: 44px 24px; }
+  .wtb-post-single { padding: 30px 22px; }
+}

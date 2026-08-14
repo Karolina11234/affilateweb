@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WayToBuy — Nejlepší slevy a dárkové tipy každý den</title>
-<meta name="description" content="Kurátorský výběr slevových kupónů a dárkových tipů z českých e-shopů. Šetřete chytře s WayToBuy.">
+<title>Kupóny a slevy — WayToBuy</title>
+<meta name="description" content="Všechny aktuální slevové kupóny na jednom místě. Filtruj podle obchodu, řaď podle toho, co brzy končí.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -23,7 +23,7 @@
     <nav class="wtb-nav">
       <a href="index.html">Domů</a>
       <a href="clanky.html">Články</a>
-      <a href="kupony.html">Kupóny a slevy</a>
+      <a href="kupony.html" style="color:#c25a3c">Kupóny a slevy</a>
       <a href="o-nas.html">O nás</a>
       <a href="kontakt.html">Kontakt</a>
     </nav>
@@ -43,57 +43,24 @@
   <a href="kontakt.html">Kontakt</a>
 </div>
 
-<section class="wtb-hero">
-  <div class="wtb-container">
-    <div class="wtb-hero-inner">
-      <span class="wtb-hero-badge"><span class="wtb-hero-badge-dot"></span> ZDE JSOU SLEVY, KTERÉ MILUJEŠ</span>
-      <h1 class="wtb-hero-title">
-        <span class="line">Naučím tě</span>
-        <span class="line"><span class="highlight">nakupovat <em>levněji</em></span></span>
-        <span class="line tilted">se slevou ✦</span>
-      </h1>
-      <p class="wtb-hero-sub">Kurátorský průvodce dárky, slevami a chytrými nákupy. Žádný spam, jen ty nejlepší kódy a inspirace ✦</p>
-      <div class="wtb-hero-ctas">
-        <a class="wtb-btn-dark" href="kupony.html">Objevit slevy →</a>
-        <a class="wtb-btn-light" href="clanky.html">Číst články</a>
-      </div>
-      <div class="wtb-float wtb-float-1">✦</div>
-      <div class="wtb-float wtb-float-2">❋</div>
-      <div class="wtb-float wtb-float-3">♥</div>
-      <div class="wtb-float wtb-float-4">❇</div>
-    </div>
-  </div>
-</section>
+<div class="wtb-container" style="padding-top:50px">
+  <section class="wtb-page-hero">
+    <span class="tag">✦ Neztrať se v čase</span>
+    <h1>Všechny <em>kupóny</em> na jednom místě</h1>
+    <p>Řaď podle toho, co brzy končí, nebo filtruj podle obchodu. Klikni na kód a rovnou se zkopíruje.</p>
+  </section>
 
-<div class="wtb-container">
-  <div class="wtb-section-head">
-    <div>
-      <span class="wtb-eyebrow">✦ Neztrať se v čase</span>
-      <h2 class="wtb-section-title">Aktuální <em>kupóny</em></h2>
+  <div class="wtb-filter-bar">
+    <div class="wtb-search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#4a4a5e" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="#4a4a5e" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="text" id="search-input" placeholder="Hledat obchod nebo kód…">
     </div>
-    <a class="wtb-card-link" href="kupony.html">Zobrazit všechny →</a>
+    <select class="wtb-sort-select" id="sort-select"></select>
   </div>
-  <div class="wtb-coupon-strip" id="coupon-strip">
-    <p class="wtb-empty-state">Načítám kupóny…</p>
-  </div>
+  <div class="wtb-chip-group" id="chip-group"></div>
+  <div class="wtb-coupon-grid" id="coupon-grid"></div>
 
-  <div class="wtb-section-head" style="margin-top:50px">
-    <div>
-      <span class="wtb-eyebrow">✦ Z blogu</span>
-      <h2 class="wtb-section-title">Nejnovější <em>příspěvky</em></h2>
-    </div>
-    <a class="wtb-card-link" href="clanky.html">Všechny články →</a>
-  </div>
-  <div class="blog-posts" id="home-article-grid" style="margin-bottom:50px"></div>
-
-  <div class="wtb-cta-band">
-    <h2>Začni šetřit <em>ještě dnes</em> ✦</h2>
-    <p>Nové kupóny a dárkové tipy rovnou do schránky — bez spamu, jen to nejlepší.</p>
-    <div class="wtb-cta-band__actions">
-      <a href="kontakt.html" class="wtb-btn-light">📩 Napsat nám</a>
-      <a href="o-nas.html" class="wtb-btn-dark" style="border-color:rgba(251,247,238,0.4)">O projektu</a>
-    </div>
-  </div>
+  <p class="wtb-disclaimer">Jsme affiliate partner uvedených obchodů — díky nákupu přes naše odkazy nám může náležet malá provize, tebe to nic nestojí navíc. Platnost kódů si prosím vždy ověř přímo v obchodě.</p>
 </div>
 
 <footer class="wtb-footer">

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WayToBuy — Nejlepší slevy a dárkové tipy každý den</title>
-<meta name="description" content="Kurátorský výběr slevových kupónů a dárkových tipů z českých e-shopů. Šetřete chytře s WayToBuy.">
+<title>Kontakt — WayToBuy</title>
+<meta name="description" content="Napiš nám na WayToBuy — dotazy, spolupráce i pozdravy vítáme.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -25,7 +25,7 @@
       <a href="clanky.html">Články</a>
       <a href="kupony.html">Kupóny a slevy</a>
       <a href="o-nas.html">O nás</a>
-      <a href="kontakt.html">Kontakt</a>
+      <a href="kontakt.html" style="color:#c25a3c">Kontakt</a>
     </nav>
     <a class="wtb-cta" href="kupony.html"><span class="wtb-cta-dot"></span> Objevit slevy</a>
     <button aria-label="Menu" class="wtb-hamburger" id="wtbHamburger">
@@ -43,64 +43,72 @@
   <a href="kontakt.html">Kontakt</a>
 </div>
 
-<section class="wtb-hero">
-  <div class="wtb-container">
-    <div class="wtb-hero-inner">
-      <span class="wtb-hero-badge"><span class="wtb-hero-badge-dot"></span> ZDE JSOU SLEVY, KTERÉ MILUJEŠ</span>
-      <h1 class="wtb-hero-title">
-        <span class="line">Naučím tě</span>
-        <span class="line"><span class="highlight">nakupovat <em>levněji</em></span></span>
-        <span class="line tilted">se slevou ✦</span>
-      </h1>
-      <p class="wtb-hero-sub">Kurátorský průvodce dárky, slevami a chytrými nákupy. Žádný spam, jen ty nejlepší kódy a inspirace ✦</p>
-      <div class="wtb-hero-ctas">
-        <a class="wtb-btn-dark" href="kupony.html">Objevit slevy →</a>
-        <a class="wtb-btn-light" href="clanky.html">Číst články</a>
+<div class="wtb-container" style="padding-top:50px">
+
+  <section class="wtb-page-hero">
+    <span class="tag">✦ Spojme se</span>
+    <h1>Pojď si <em>napsat</em></h1>
+    <p>Máš dotaz, návrh na spolupráci nebo chceš jen pozdravit? Budeme nadšení, když se ozveš ✦</p>
+  </section>
+
+  <div class="wtb-contact-grid">
+    <aside class="wtb-contact-info">
+      <h2>Kontaktní <em>údaje</em></h2>
+      <p>Odpovídáme obvykle do 48 hodin.</p>
+      <div class="wtb-contact-item">
+        <div class="ico">@</div>
+        <div>
+          <h4>E-mail</h4>
+          <a href="mailto:info.waytobuy@gmail.com">info.waytobuy@gmail.com</a>
+        </div>
       </div>
-      <div class="wtb-float wtb-float-1">✦</div>
-      <div class="wtb-float wtb-float-2">❋</div>
-      <div class="wtb-float wtb-float-3">♥</div>
-      <div class="wtb-float wtb-float-4">❇</div>
-    </div>
-  </div>
-</section>
+      <div class="wtb-contact-item">
+        <div class="ico">✦</div>
+        <div>
+          <h4>Spolupráce</h4>
+          <a href="mailto:info.waytobuy@gmail.com">info.waytobuy@gmail.com</a>
+        </div>
+      </div>
+      <div class="wtb-contact-item">
+        <div class="ico">❋</div>
+        <div>
+          <h4>Adresa</h4>
+          <p>Praha, Česká republika</p>
+        </div>
+      </div>
+      <div class="wtb-contact-item">
+        <div class="ico">★</div>
+        <div>
+          <h4>Otevírací doba</h4>
+          <p>Po–Pá &nbsp;9:00 – 17:00</p>
+        </div>
+      </div>
+    </aside>
 
-<div class="wtb-container">
-  <div class="wtb-section-head">
-    <div>
-      <span class="wtb-eyebrow">✦ Neztrať se v čase</span>
-      <h2 class="wtb-section-title">Aktuální <em>kupóny</em></h2>
-    </div>
-    <a class="wtb-card-link" href="kupony.html">Zobrazit všechny →</a>
-  </div>
-  <div class="wtb-coupon-strip" id="coupon-strip">
-    <p class="wtb-empty-state">Načítám kupóny…</p>
+    <form action="https://formspree.io/f/xpqvpjab" method="POST" class="wtb-contact-form">
+      <h2>Napiš nám zprávu</h2>
+      <p class="sub">Rádi si vyslechneme tvůj nápad nebo dotaz</p>
+      <label>Jméno</label>
+      <input type="text" name="name" placeholder="Tvé jméno" required>
+      <label>E-mail</label>
+      <input type="email" name="email" placeholder="tvuj@email.cz" required>
+      <label>Předmět</label>
+      <input type="text" name="subject" placeholder="O čem si chceš psát?">
+      <label>Zpráva</label>
+      <textarea name="message" placeholder="Napiš nám pár slov ✦" required></textarea>
+      <button type="submit">Odeslat zprávu →</button>
+    </form>
+    <!-- Formulář jede přes Formspree, žádné vlastní JS není potřeba -->
   </div>
 
-  <div class="wtb-section-head" style="margin-top:50px">
-    <div>
-      <span class="wtb-eyebrow">✦ Z blogu</span>
-      <h2 class="wtb-section-title">Nejnovější <em>příspěvky</em></h2>
-    </div>
-    <a class="wtb-card-link" href="clanky.html">Všechny články →</a>
-  </div>
-  <div class="blog-posts" id="home-article-grid" style="margin-bottom:50px"></div>
-
-  <div class="wtb-cta-band">
-    <h2>Začni šetřit <em>ještě dnes</em> ✦</h2>
-    <p>Nové kupóny a dárkové tipy rovnou do schránky — bez spamu, jen to nejlepší.</p>
-    <div class="wtb-cta-band__actions">
-      <a href="kontakt.html" class="wtb-btn-light">📩 Napsat nám</a>
-      <a href="o-nas.html" class="wtb-btn-dark" style="border-color:rgba(251,247,238,0.4)">O projektu</a>
-    </div>
-  </div>
+  <div style="height:60px"></div>
 </div>
 
 <footer class="wtb-footer">
   <div class="wtb-container">
     <div class="wtb-footer-top">
       <h2 class="wtb-footer-cta">Začni šetřit <em>ještě dnes</em> ✦</h2>
-      <a class="wtb-btn-light" href="kontakt.html">Napsat nám →</a>
+      <a class="wtb-btn-light" href="kupony.html">Objevit slevy →</a>
     </div>
     <div class="wtb-footer-grid">
       <div>
