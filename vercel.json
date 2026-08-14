@@ -1,7 +1,1 @@
-{
-  "functions": {
-    "api/og.js": {
-      "runtime": "edge"
-    }
-  }
-}
+{}
