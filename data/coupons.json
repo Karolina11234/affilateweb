@@ -1,10 +1,83 @@
 [
-  { "id": 1, "brand": "Notino", "discount": "20 %", "code": "WAYTOBUY20", "until": "2026-08-31", "color": "sage", "url": "#" },
-  { "id": 2, "brand": "Alza", "discount": "500 Kč", "code": "ALZA500", "until": "2026-08-25", "color": "butter", "url": "#" },
-  { "id": 3, "brand": "Zoot", "discount": "15 %", "code": "ZOOT15", "until": "2026-08-20", "color": "blue", "url": "#" },
-  { "id": 4, "brand": "Mall.cz", "discount": "10 %", "code": "MALL10", "until": "2026-09-01", "color": "coral", "url": "#" },
-  { "id": 5, "brand": "Dr. Max", "discount": "25 %", "code": "DRMAX25", "until": "2026-08-18", "color": "terracotta", "url": "#" },
-  { "id": 6, "brand": "Bushman", "discount": "30 %", "code": "BUSHMAN30", "until": "2026-09-05", "color": "sage", "url": "#" },
-  { "id": 7, "brand": "Datart", "discount": "1000 Kč", "code": "DATART1000", "until": "2026-08-28", "color": "butter", "url": "#" },
-  { "id": 8, "brand": "Sephora", "discount": "20 %", "code": "SEPHORA20", "until": "2026-08-22", "color": "blue", "url": "#" }
+  {
+    "id": 1786993367392,
+    "brand": "",
+    "code": "",
+    "discount": "",
+    "until": null,
+    "url": "",
+    "image": ""
+  },
+  {
+    "id": 1,
+    "brand": "Notino",
+    "discount": "20 %",
+    "code": "WAYTOBUY20",
+    "until": "2026-08-31",
+    "color": "sage",
+    "url": "#"
+  },
+  {
+    "id": 2,
+    "brand": "Alza",
+    "discount": "500 Kč",
+    "code": "ALZA500",
+    "until": "2026-08-25",
+    "color": "butter",
+    "url": "#"
+  },
+  {
+    "id": 3,
+    "brand": "Zoot",
+    "discount": "15 %",
+    "code": "ZOOT15",
+    "until": "2026-08-20",
+    "color": "blue",
+    "url": "#"
+  },
+  {
+    "id": 4,
+    "brand": "Mall.cz",
+    "discount": "10 %",
+    "code": "MALL10",
+    "until": "2026-09-01",
+    "color": "coral",
+    "url": "#"
+  },
+  {
+    "id": 5,
+    "brand": "Dr. Max",
+    "discount": "25 %",
+    "code": "DRMAX25",
+    "until": "2026-08-18",
+    "color": "terracotta",
+    "url": "#"
+  },
+  {
+    "id": 6,
+    "brand": "Bushman",
+    "discount": "30 %",
+    "code": "BUSHMAN30",
+    "until": "2026-09-05",
+    "color": "sage",
+    "url": "#"
+  },
+  {
+    "id": 7,
+    "brand": "Datart",
+    "discount": "1000 Kč",
+    "code": "DATART1000",
+    "until": "2026-08-28",
+    "color": "butter",
+    "url": "#"
+  },
+  {
+    "id": 8,
+    "brand": "Sephora",
+    "discount": "20 %",
+    "code": "SEPHORA20",
+    "until": "2026-08-22",
+    "color": "blue",
+    "url": "#"
+  }
 ]
