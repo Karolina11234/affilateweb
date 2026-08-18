@@ -761,6 +761,10 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
   flex: 1; display: flex; align-items: center;
 }
 .wtb-coupon-discount .minus { font-weight: 400; margin-right: 4px; }
+.wtb-coupon-desc {
+  font-family: 'DM Sans', sans-serif; font-size: .85rem; line-height: 1.4;
+  opacity: .85; margin: -6px 0 14px;
+}
 .wtb-coupon-bottom {
   display: flex; align-items: center; justify-content: space-between;
   gap: 10px; margin-top: auto;
@@ -1126,6 +1130,25 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
 .wtb-post-single .wtb-post-thumb .wtb-card-thumb-icon { font-size: 4rem; }
 .wtb-post-single .wtb-post-body { color: #2c2c3a; font-size: 1rem; }
 .wtb-post-single .wtb-post-body p { margin-bottom: 1.1em; }
+
+/* Fotka + tlačítko Koupit vložené automatizací za každý podnadpis (produkt) v článku */
+.wtb-inline-product {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  background: rgba(26,26,38,.04); border: 1px solid rgba(26,26,38,.12);
+  border-radius: 18px; padding: 16px; margin: 4px 0 22px;
+}
+.wtb-inline-product-img {
+  width: 96px; height: 96px; object-fit: contain; border-radius: 12px;
+  background: #fbf7ee; border: 1px solid rgba(26,26,38,.12); flex-shrink: 0;
+}
+.wtb-btn-buy-inline {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #1a1a26; color: #fbf7ee; text-decoration: none;
+  padding: 12px 22px; border-radius: 999px;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: .85rem;
+  letter-spacing: .04em; transition: all .25s ease;
+}
+.wtb-btn-buy-inline:hover { background: #c25a3c; }
 .wtb-post-back {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: .85rem; font-weight: 600; margin-bottom: 26px;
