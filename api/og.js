@@ -198,6 +198,8 @@ function couponTemplate({ obchod, sleva, kod, image }) {
                 },
               },
               {
+                // Pozn.: kód se na obrázku SCHVÁLNĚ nezobrazuje (i kdyby přišel v query),
+                // aby lidi museli kliknout na web, kde si ho zkopírují.
                 type: 'div',
                 props: {
                   style: {
@@ -209,12 +211,13 @@ function couponTemplate({ obchod, sleva, kod, image }) {
                     borderRadius: '999px',
                     padding: '30px 50px',
                     fontFamily: 'DM Sans',
-                    fontSize: 50,
+                    fontSize: 42,
                     fontWeight: 700,
-                    letterSpacing: 6,
+                    letterSpacing: 4,
+                    textTransform: 'uppercase',
                     alignSelf: 'flex-start',
                   },
-                  children: kod || '',
+                  children: 'Kód na webu ✦',
                 },
               },
             ],
