@@ -1,39 +1,49 @@
 // api/og.js
-// Generátor obrázků pro Instagram/Facebook + web, ve stylu Rosteme og.mjs.
-// Běží jako Vercel Edge Function - žádný Next.js potřeba, jen /api soubor + vercel.json.
+// Generátor obrázků pro Instagram/Facebook + web - ve stylu webu WayToBuy
+// ("Modern Retro": krémové pozadí, barevné karty sage/butter/blue/coral/terracotta,
+// písma Fraunces (nadpisy) + DM Sans (popisky), tenký černý rámeček karet).
 //
 // Podle query parametrů automaticky pozná, jaký typ obrázku má vygenerovat:
-//   ?title=...&image=...                        -> obrázek k blogovému článku (1200x630)
-//   ?kod=...&sleva=...&obchod=...&image=...      -> slevový kupón (1080x1080)
-//   ?text=...&image=...                          -> karuselový snímek (1080x1080)
+//   ?title=...&image=...&category=...            -> obrázek k blogovému článku / karuselu (1080x1080)
+//   ?kod=...&sleva=...&obchod=...&image=...       -> slevový kupón (1080x1080)
+//   ?text=...&image=...                           -> karuselový snímek (1080x1080), image je volitelný
 //
-// Vyzkoušej v prohlížeči např.:
-//   /api/og?title=5%20tip%C5%AF%20na%20d%C3%A1rek&image=https://picsum.photos/800
+// Princip: fotka produktu (pokud existuje) je vždy jen MENŠÍ orámovaný prvek uvnitř karty,
+// nikdy není na celou plochu na pozadí - i nepovedená/nesouvisející fotka tak vypadá
+// jako součást designu a text zůstává vždy čitelný.
 
 import { ImageResponse } from '@vercel/og';
 
 export const config = { runtime: 'edge' };
 
-// ---------- Barvy / styl (uprav podle vizuální identity svého webu) ----------
-const COLORS = {
-  gradientFrom: '#eef2ff',
-  gradientTo: '#f5f3ff',
-  accent: '#4f46e5',
-  accentDark: '#3730a3',
-  text: '#1e1b4b',
-  textSoft: '#374151',
-  white: '#ffffff',
-};
+// ---------- Barvy webu (shodné s assets/css/style.css) ----------
+const INK = '#1a1a26';
+const CREAM = '#faf6ec';
+const CARD = '#fbf7ee';
+const PALETTE = [
+  { bg: '#b8c89a', text: INK, name: 'sage' },       // sage
+  { bg: '#f4d56b', text: INK, name: 'butter' },     // butter
+  { bg: '#a8c2d1', text: INK, name: 'blue' },       // blue
+  { bg: '#f0a89a', text: INK, name: 'coral' },      // coral
+  { bg: '#c25a3c', text: CARD, name: 'terracotta' },// terracotta
+];
 
-// ---------- Font s podporou české diakritiky ----------
-async function loadGoogleFont(text) {
-  const cssUrl = `https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&text=${encodeURIComponent(text)}`;
+// Deterministický výběr barvy podle textu (stejné téma/obchod = stejná barva napříč běhy)
+function pickColor(seed) {
+  const str = String(seed || 'x');
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  return PALETTE[hash % PALETTE.length];
+}
+
+// ---------- Fonty s podporou české diakritiky ----------
+async function loadGoogleFont(family, weight, text) {
+  const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(cssUrl)).text();
   const match = css.match(/src: url\(([^)]+)\) format\('(opentype|truetype)'\)/) ||
                 css.match(/src: url\(([^)]+)\)/);
-  if (!match) throw new Error('Nepodařilo se najít font v Google Fonts CSS.');
-  const fontUrl = match[1];
-  const fontRes = await fetch(fontUrl);
+  if (!match) throw new Error(`Nepodařilo se najít font ${family} v Google Fonts CSS.`);
+  const fontRes = await fetch(match[1]);
   return await fontRes.arrayBuffer();
 }
 
@@ -45,35 +55,43 @@ export default async function handler(req) {
     const kod = searchParams.get('kod');
     const sleva = searchParams.get('sleva');
     const obchod = searchParams.get('obchod');
+    const category = searchParams.get('category') || searchParams.get('kategorie') || '';
     const image = searchParams.get('image') || '';
 
-    let jsx, width, height, fontText;
+    let jsx;
+    const width = 1080;
+    const height = 1080;
+    let allText;
 
     if (kod) {
-      // ---------- KUPÓN ----------
-      width = 1080; height = 1080;
-      fontText = `${obchod || ''}${sleva || ''}${kod || ''}Slevový kódPlatí do vyprodání zásob`;
+      allText = `${obchod || ''}${sleva || ''}${kod || ''}Platí do vyprodání zásob`;
       jsx = couponTemplate({ obchod, sleva, kod, image });
     } else if (title) {
-      // ---------- ČLÁNEK / WEB ----------
-      width = 1200; height = 630;
-      fontText = title;
-      jsx = articleTemplate({ title, image });
+      allText = `${category}${title}TIP NA DÁREK`;
+      jsx = cardTemplate({ heading: title, image, eyebrow: category || 'TIP NA DÁREK', seed: title });
     } else if (text) {
-      // ---------- KARUSELOVÝ SNÍMEK ----------
-      width = 1080; height = 1080;
-      fontText = text;
-      jsx = slideTemplate({ text, image });
+      allText = `${text}`;
+      jsx = cardTemplate({ heading: text, image, eyebrow: '', seed: text });
     } else {
       return new Response('Chybí povinné parametry (title / text / kod).', { status: 400 });
     }
 
-    const fontData = await loadGoogleFont(fontText + 'ěščřžýáíéůúťďňĚŠČŘŽÝÁÍÉŮÚŤĎŇ0123456789% Kč');
+    const charset = allText + 'ěščřžýáíéůúťďňĚŠČŘŽÝÁÍÉŮÚŤĎŇ0123456789% Kč✦';
+
+    const [frauncesBold, dmSansBold, dmSansMedium] = await Promise.all([
+      loadGoogleFont('Fraunces', 700, charset),
+      loadGoogleFont('DM+Sans', 700, charset),
+      loadGoogleFont('DM+Sans', 500, charset),
+    ]);
 
     return new ImageResponse(jsx, {
       width,
       height,
-      fonts: [{ name: 'Inter', data: fontData, weight: 700, style: 'normal' }],
+      fonts: [
+        { name: 'Fraunces', data: frauncesBold, weight: 700, style: 'normal' },
+        { name: 'DM Sans', data: dmSansBold, weight: 700, style: 'normal' },
+        { name: 'DM Sans', data: dmSansMedium, weight: 500, style: 'normal' },
+      ],
     });
   } catch (err) {
     return new Response(`Chyba generátoru obrázků: ${err.message}`, { status: 500 });
@@ -84,64 +102,11 @@ export default async function handler(req) {
 // ŠABLONY
 // ==================================================================
 
-function articleTemplate({ title, image }) {
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        width: '100%',
-        height: '100%',
-        background: `linear-gradient(135deg, ${COLORS.gradientFrom}, ${COLORS.gradientTo})`,
-        fontFamily: 'Inter',
-      },
-      children: [
-        image && {
-          type: 'img',
-          props: {
-            src: image,
-            style: { width: '480px', height: '630px', objectFit: 'cover' },
-          },
-        },
-        {
-          type: 'div',
-          props: {
-            style: {
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              padding: '60px',
-              flex: 1,
-            },
-            children: [
-              {
-                type: 'div',
-                props: {
-                  style: { fontSize: 22, fontWeight: 700, color: COLORS.accent, marginBottom: 20, letterSpacing: 2 },
-                  children: 'TIP NA DÁREK',
-                },
-              },
-              {
-                type: 'div',
-                props: {
-                  style: {
-                    fontSize: 52,
-                    fontWeight: 900,
-                    color: COLORS.text,
-                    lineHeight: 1.15,
-                  },
-                  children: title,
-                },
-              },
-            ],
-          },
-        },
-      ].filter(Boolean),
-    },
-  };
-}
-
+// ---------- Kupón (1080x1080) ----------
+// Barevná karta ve stylu webu, fotka produktu (pokud je) jen jako menší orámovaný
+// čtverec vpravo nahoře - nikdy na pozadí přes celou plochu.
 function couponTemplate({ obchod, sleva, kod, image }) {
+  const color = pickColor(obchod);
   return {
     type: 'div',
     props: {
@@ -150,35 +115,161 @@ function couponTemplate({ obchod, sleva, kod, image }) {
         flexDirection: 'column',
         width: '100%',
         height: '100%',
-        background: `linear-gradient(160deg, ${COLORS.accent}, ${COLORS.accentDark})`,
-        fontFamily: 'Inter',
-        padding: '70px',
-        color: COLORS.white,
+        background: CREAM,
+        fontFamily: 'DM Sans',
+        padding: '48px',
       },
       children: [
         {
           type: 'div',
           props: {
-            style: { fontSize: 30, fontWeight: 700, opacity: 0.85, marginBottom: 10 },
-            children: obchod || 'Slevový kód',
+            style: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              background: color.bg,
+              color: color.text,
+              border: `4px solid ${INK}`,
+              borderRadius: '48px',
+              padding: '64px',
+              position: 'relative',
+            },
+            children: [
+              {
+                type: 'div',
+                props: {
+                  style: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                  },
+                  children: [
+                    {
+                      type: 'div',
+                      props: {
+                        style: {
+                          fontFamily: 'DM Sans',
+                          fontSize: 30,
+                          fontWeight: 700,
+                          letterSpacing: 4,
+                          textTransform: 'uppercase',
+                        },
+                        children: obchod || 'Slevový kód',
+                      },
+                    },
+                    image && {
+                      type: 'img',
+                      props: {
+                        src: image,
+                        style: {
+                          width: '190px',
+                          height: '190px',
+                          objectFit: 'cover',
+                          borderRadius: '28px',
+                          border: `4px solid ${INK}`,
+                        },
+                      },
+                    },
+                  ].filter(Boolean),
+                },
+              },
+              {
+                type: 'div',
+                props: {
+                  style: {
+                    display: 'flex',
+                    flex: 1,
+                    alignItems: 'center',
+                  },
+                  children: {
+                    type: 'div',
+                    props: {
+                      style: {
+                        fontFamily: 'Fraunces',
+                        fontSize: 220,
+                        fontWeight: 700,
+                        letterSpacing: -6,
+                        lineHeight: 1,
+                      },
+                      children: sleva || '',
+                    },
+                  },
+                },
+              },
+              {
+                type: 'div',
+                props: {
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: INK,
+                    color: CARD,
+                    borderRadius: '999px',
+                    padding: '30px 50px',
+                    fontFamily: 'DM Sans',
+                    fontSize: 50,
+                    fontWeight: 700,
+                    letterSpacing: 6,
+                    alignSelf: 'flex-start',
+                  },
+                  children: kod || '',
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };
+}
+
+// ---------- Článek / karuselový snímek (1080x1080) ----------
+// Pokud je fotka: rámovaná fotka nahoře (jako post-thumbnail na webu) + textový blok dole.
+// Pokud fotka není (např. úvodní "hook" snímek karuselu): čistá barevná karta s velkým textem.
+function cardTemplate({ heading, image, eyebrow, seed }) {
+  const color = pickColor(seed);
+
+  const textBlock = {
+    type: 'div',
+    props: {
+      style: {
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        justifyContent: 'center',
+        padding: '56px 64px',
+      },
+      children: [
+        eyebrow && {
+          type: 'div',
+          props: {
+            style: {
+              fontFamily: 'DM Sans',
+              fontSize: 26,
+              fontWeight: 700,
+              letterSpacing: 5,
+              textTransform: 'uppercase',
+              color: image ? '#c25a3c' : color.text,
+              opacity: image ? 1 : 0.75,
+              marginBottom: 22,
+            },
+            children: eyebrow,
           },
         },
         {
           type: 'div',
           props: {
-            style: { fontSize: 160, fontWeight: 900, lineHeight: 1, marginBottom: 30 },
-            children: sleva || '',
-          },
-        },
-        image && {
-          type: 'img',
-          props: {
-            src: image,
             style: {
-              width: '260px', height: '260px', objectFit: 'cover',
-              borderRadius: '24px', position: 'absolute', right: 60, top: 60,
-              border: `6px solid ${COLORS.white}`,
+              fontFamily: 'Fraunces',
+              fontSize: image ? 58 : 72,
+              fontWeight: 700,
+              lineHeight: 1.12,
+              letterSpacing: -1,
+              color: image ? INK : color.text,
             },
+            children: heading,
           },
         },
         {
@@ -186,76 +277,102 @@ function couponTemplate({ obchod, sleva, kod, image }) {
           props: {
             style: {
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: COLORS.white,
-              color: COLORS.accentDark,
-              borderRadius: '20px',
-              padding: '28px 40px',
-              fontSize: 54,
-              fontWeight: 900,
-              letterSpacing: 4,
-              marginTop: 'auto',
-              alignSelf: 'flex-start',
+              marginTop: 30,
+              fontSize: 40,
             },
-            children: kod || '',
+            children: '✦',
           },
         },
       ].filter(Boolean),
     },
   };
-}
 
-function slideTemplate({ text, image }) {
+  if (!image) {
+    // Čistá barevná karta bez fotky - bezpečná varianta pro obecné/hook snímky.
+    return {
+      type: 'div',
+      props: {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: '100%',
+          background: CREAM,
+          padding: '48px',
+        },
+        children: [
+          {
+            type: 'div',
+            props: {
+              style: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                height: '100%',
+                background: color.bg,
+                border: `4px solid ${INK}`,
+                borderRadius: '48px',
+                justifyContent: 'center',
+              },
+              children: [textBlock],
+            },
+          },
+        ],
+      },
+    };
+  }
+
+  // S fotkou: fotka orámovaná nahoře (~55 % výšky), textový blok na krémovém pozadí dole.
   return {
     type: 'div',
     props: {
       style: {
         display: 'flex',
-        position: 'relative',
+        flexDirection: 'column',
         width: '100%',
         height: '100%',
-        fontFamily: 'Inter',
+        background: CREAM,
+        padding: '48px',
       },
       children: [
-        image && {
-          type: 'img',
-          props: {
-            src: image,
-            style: { position: 'absolute', width: '100%', height: '100%', objectFit: 'cover' },
-          },
-        },
-        {
-          // ztmavený přechod pro čitelnost textu
-          type: 'div',
-          props: {
-            style: {
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(0deg, rgba(30,27,75,0.92) 0%, rgba(30,27,75,0.15) 55%, rgba(30,27,75,0.15) 100%)',
-            },
-          },
-        },
         {
           type: 'div',
           props: {
             style: {
               display: 'flex',
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: '70px',
-              color: COLORS.white,
-              fontSize: 56,
-              fontWeight: 900,
-              lineHeight: 1.25,
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              background: CARD,
+              border: `4px solid ${INK}`,
+              borderRadius: '48px',
+              overflow: 'hidden',
             },
-            children: text,
+            children: [
+              {
+                type: 'div',
+                props: {
+                  style: {
+                    display: 'flex',
+                    width: '100%',
+                    height: '52%',
+                    borderBottom: `4px solid ${INK}`,
+                    overflow: 'hidden',
+                  },
+                  children: {
+                    type: 'img',
+                    props: {
+                      src: image,
+                      style: { width: '100%', height: '100%', objectFit: 'cover' },
+                    },
+                  },
+                },
+              },
+              textBlock,
+            ],
           },
         },
-      ].filter(Boolean),
+      ],
     },
   };
 }
