@@ -1,6 +1,6 @@
 [
   {
-    "id": 1786994362623,
+    "id": 1787040434118,
     "brand": "Fajnspánek.cz",
     "code": "AF8542",
     "discount": 0.06,
@@ -60,15 +60,6 @@
     "code": "MALL10",
     "until": "2026-09-01",
     "color": "coral",
-    "url": "#"
-  },
-  {
-    "id": 5,
-    "brand": "Dr. Max",
-    "discount": "25 %",
-    "code": "DRMAX25",
-    "until": "2026-08-18",
-    "color": "terracotta",
     "url": "#"
   },
   {
