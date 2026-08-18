@@ -52,7 +52,6 @@ export default async function handler(req) {
     const { searchParams } = new URL(req.url);
     const title = searchParams.get('title');
     const text = searchParams.get('text');
-    const kod = searchParams.get('kod');
     const sleva = searchParams.get('sleva');
     const obchod = searchParams.get('obchod');
     const category = searchParams.get('category') || searchParams.get('kategorie') || '';
@@ -63,9 +62,11 @@ export default async function handler(req) {
     const height = 1080;
     let allText;
 
-    if (kod) {
-      allText = `${obchod || ''}${sleva || ''}${kod || ''}Platí do vyprodání zásob`;
-      jsx = couponTemplate({ obchod, sleva, kod, image });
+    if (obchod || sleva) {
+      // Kupón: kód se sem záměrně neposílá (viz couponTemplate) - typ obrázku
+      // proto poznáváme podle obchod/sleva, ne podle kódu.
+      allText = `${obchod || ''}${sleva || ''}Kód na webu`;
+      jsx = couponTemplate({ obchod, sleva, image });
     } else if (title) {
       allText = `${category}${title}TIP NA DÁREK`;
       jsx = cardTemplate({ heading: title, image, eyebrow: category || 'TIP NA DÁREK', seed: title });
@@ -73,7 +74,7 @@ export default async function handler(req) {
       allText = `${text}`;
       jsx = cardTemplate({ heading: text, image, eyebrow: '', seed: text });
     } else {
-      return new Response('Chybí povinné parametry (title / text / kod).', { status: 400 });
+      return new Response('Chybí povinné parametry (title / text / obchod+sleva).', { status: 400 });
     }
 
     const charset = allText + 'ěščřžýáíéůúťďňĚŠČŘŽÝÁÍÉŮÚŤĎŇ0123456789% Kč✦';
@@ -105,7 +106,7 @@ export default async function handler(req) {
 // ---------- Kupón (1080x1080) ----------
 // Barevná karta ve stylu webu, fotka produktu (pokud je) jen jako menší orámovaný
 // čtverec vpravo nahoře - nikdy na pozadí přes celou plochu.
-function couponTemplate({ obchod, sleva, kod, image }) {
+function couponTemplate({ obchod, sleva, image }) {
   const color = pickColor(obchod);
   return {
     type: 'div',
