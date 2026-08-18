@@ -99,6 +99,9 @@ do statického HTML (index, clanky, kupony, clanek).
       ? '<span class="wtb-coupon-until">Platí do ' + escapeHtml(formatDateCz(coupon.until)) + '</span>'
       : '<span class="wtb-coupon-until"></span>';
     var link = coupon.url && coupon.url !== '#' ? coupon.url : null;
+    var descHtml = coupon.description
+      ? '<p class="wtb-coupon-desc">' + escapeHtml(coupon.description) + '</p>'
+      : '';
 
     return (
       '<div class="wtb-coupon wtb-coupon-' + color + '" data-brand="' + brand.toLowerCase() + '" data-code="' + code + '" data-until="' + escapeHtml(coupon.until || '') + '">' +
@@ -107,6 +110,7 @@ do statického HTML (index, clanky, kupony, clanek).
           '<span class="wtb-coupon-fav">🎁</span>' +
         '</div>' +
         '<div class="wtb-coupon-discount">' + discount + '</div>' +
+        descHtml +
         '<div class="wtb-coupon-bottom">' +
           untilHtml +
           '<button type="button" class="wtb-coupon-copy" data-code="' + code + '" data-link="' + escapeHtml(link || '') + '">' +
