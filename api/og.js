@@ -354,8 +354,11 @@ function cardTemplate({ heading, image, eyebrow, seed }) {
                 props: {
                   style: {
                     display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     width: '100%',
                     height: '52%',
+                    background: color.bg,
                     borderBottom: `4px solid ${INK}`,
                     overflow: 'hidden',
                   },
@@ -363,7 +366,7 @@ function cardTemplate({ heading, image, eyebrow, seed }) {
                     type: 'img',
                     props: {
                       src: image,
-                      style: { width: '100%', height: '100%', objectFit: 'cover' },
+                      style: { width: '82%', height: '82%', objectFit: 'contain' },
                     },
                   },
                 },
