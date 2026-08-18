@@ -1114,12 +1114,12 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
 /* === ARTICLE DETAIL (clanek.html) === */
 .wtb-post-single {
   background: #fbf7ee; border: 1px solid #1a1a26; border-radius: 28px;
-  padding: 46px; max-width: 800px; margin: 0 auto 40px;
+  padding: 56px; max-width: 980px; margin: 0 auto 40px;
 }
 .wtb-post-single .wtb-card-cat { margin-bottom: 14px; }
-.wtb-post-single h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 14px; }
+.wtb-post-single h1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); margin-bottom: 14px; }
 .wtb-post-single .wtb-post-date {
-  font-size: .85rem; color: rgba(26,26,38,.55); font-style: italic;
+  font-size: .9rem; color: rgba(26,26,38,.55); font-style: italic;
   font-family: 'Fraunces', serif; margin-bottom: 28px; display: block;
 }
 .wtb-post-single .wtb-post-thumb {
@@ -1128,24 +1128,25 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
   justify-content: center; margin-bottom: 30px; border: 1px solid #1a1a26;
 }
 .wtb-post-single .wtb-post-thumb .wtb-card-thumb-icon { font-size: 4rem; }
-.wtb-post-single .wtb-post-body { color: #2c2c3a; font-size: 1rem; }
+.wtb-post-single .wtb-post-body { color: #2c2c3a; font-size: 1.12rem; line-height: 1.75; }
+.wtb-post-single .wtb-post-body h3 { font-size: 1.5rem; margin-top: 1.4em; }
 .wtb-post-single .wtb-post-body p { margin-bottom: 1.1em; }
 
 /* Fotka + tlačítko Koupit vložené automatizací za každý podnadpis (produkt) v článku */
 .wtb-inline-product {
-  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
   background: rgba(26,26,38,.04); border: 1px solid rgba(26,26,38,.12);
-  border-radius: 18px; padding: 16px; margin: 4px 0 22px;
+  border-radius: 18px; padding: 20px; margin: 8px 0 24px;
 }
 .wtb-inline-product-img {
-  width: 96px; height: 96px; object-fit: contain; border-radius: 12px;
+  width: 170px; height: 170px; object-fit: contain; border-radius: 14px;
   background: #fbf7ee; border: 1px solid rgba(26,26,38,.12); flex-shrink: 0;
 }
 .wtb-btn-buy-inline {
   display: inline-flex; align-items: center; gap: 6px;
   background: #1a1a26; color: #fbf7ee; text-decoration: none;
-  padding: 12px 22px; border-radius: 999px;
-  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: .85rem;
+  padding: 14px 26px; border-radius: 999px;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: .92rem;
   letter-spacing: .04em; transition: all .25s ease;
 }
 .wtb-btn-buy-inline:hover { background: #c25a3c; }
