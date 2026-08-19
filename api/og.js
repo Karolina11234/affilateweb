@@ -36,6 +36,26 @@ function pickColor(seed) {
   return PALETTE[hash % PALETTE.length];
 }
 
+// Ozdobný "kosočtverec" nakreslený čistě CSS tvarem (otočený čtverec), NE textovým
+// znakem ✦ - ten v některých fontech (např. DM Sans) chybí a vykreslí se jako
+// prázdný čtvereček ("díra" v textu). Takhle se zobrazí vždy spolehlivě.
+function diamondGlyph(color, size = 20) {
+  return {
+    type: 'div',
+    props: {
+      style: {
+        display: 'flex',
+        width: `${size}px`,
+        height: `${size}px`,
+        background: color,
+        transform: 'rotate(45deg)',
+        borderRadius: '3px',
+        flexShrink: 0,
+      },
+    },
+  };
+}
+
 // ---------- Fonty s podporou české diakritiky ----------
 async function loadGoogleFont(family, weight, text) {
   const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
@@ -78,7 +98,7 @@ export default async function handler(req) {
       return new Response('Chybí povinné parametry (title / text / obchod+sleva).', { status: 400 });
     }
 
-    const charset = allText + 'ěščřžýáíéůúťďňóĚŠČŘŽÝÁÍÉŮÚŤĎŇÓ0123456789% Kč✦';
+    const charset = allText + 'ěščřžýáíéůúťďňóĚŠČŘŽÝÁÍÉŮÚŤĎŇÓ0123456789% Kč';
 
     const [frauncesBold, dmSansBold, dmSansMedium] = await Promise.all([
       loadGoogleFont('Fraunces', 700, charset),
@@ -227,6 +247,7 @@ function couponTemplate({ obchod, sleva, image, popis }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    gap: '14px',
                     background: INK,
                     color: CARD,
                     borderRadius: '999px',
@@ -238,7 +259,10 @@ function couponTemplate({ obchod, sleva, image, popis }) {
                     textTransform: 'uppercase',
                     alignSelf: 'flex-start',
                   },
-                  children: 'Kód na webu ✦',
+                  children: [
+                    { type: 'div', props: { style: { display: 'flex' }, children: 'Kód na webu' } },
+                    diamondGlyph(CARD, 16),
+                  ],
                 },
               },
             ].filter(Boolean),
@@ -302,9 +326,8 @@ function cardTemplate({ heading, image, eyebrow, seed }) {
             style: {
               display: 'flex',
               marginTop: 30,
-              fontSize: 40,
             },
-            children: '✦',
+            children: diamondGlyph(image ? '#c25a3c' : color.text, 22),
           },
         },
       ].filter(Boolean),
