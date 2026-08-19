@@ -54,6 +54,7 @@ export default async function handler(req) {
     const text = searchParams.get('text');
     const sleva = searchParams.get('sleva');
     const obchod = searchParams.get('obchod');
+    const popis = searchParams.get('popis') || '';
     const category = searchParams.get('category') || searchParams.get('kategorie') || '';
     const image = searchParams.get('image') || '';
 
@@ -65,8 +66,8 @@ export default async function handler(req) {
     if (obchod || sleva) {
       // Kupón: kód se sem záměrně neposílá (viz couponTemplate) - typ obrázku
       // proto poznáváme podle obchod/sleva, ne podle kódu.
-      allText = `${obchod || ''}${sleva || ''}Kód na webu`;
-      jsx = couponTemplate({ obchod, sleva, image });
+      allText = `${obchod || ''}${sleva || ''}Kód na webu${popis}`;
+      jsx = couponTemplate({ obchod, sleva, image, popis });
     } else if (title) {
       allText = `${category}${title}TIP NA DÁREK`;
       jsx = cardTemplate({ heading: title, image, eyebrow: category || 'TIP NA DÁREK', seed: title });
@@ -77,7 +78,7 @@ export default async function handler(req) {
       return new Response('Chybí povinné parametry (title / text / obchod+sleva).', { status: 400 });
     }
 
-    const charset = allText + 'ěščřžýáíéůúťďňĚŠČŘŽÝÁÍÉŮÚŤĎŇ0123456789% Kč✦';
+    const charset = allText + 'ěščřžýáíéůúťďňóĚŠČŘŽÝÁÍÉŮÚŤĎŇÓ0123456789% Kč✦';
 
     const [frauncesBold, dmSansBold, dmSansMedium] = await Promise.all([
       loadGoogleFont('Fraunces', 700, charset),
@@ -106,7 +107,7 @@ export default async function handler(req) {
 // ---------- Kupón (1080x1080) ----------
 // Barevná karta ve stylu webu, fotka produktu (pokud je) jen jako menší orámovaný
 // čtverec vpravo nahoře - nikdy na pozadí přes celou plochu.
-function couponTemplate({ obchod, sleva, image }) {
+function couponTemplate({ obchod, sleva, image, popis }) {
   const color = pickColor(obchod);
   return {
     type: 'div',
@@ -198,6 +199,25 @@ function couponTemplate({ obchod, sleva, image }) {
                   },
                 },
               },
+              popis && {
+                // Podmínka/omezení kupónu (např. "Sleva 6 % při nákupu nad 10 000 Kč") -
+                // zobrazuje se rovnou na obrázku, aby lidi věděli, co je čeká, ještě
+                // než kliknou na web. Kód samotný se ale pořád schválně neukazuje.
+                type: 'div',
+                props: {
+                  style: {
+                    display: 'flex',
+                    fontFamily: 'DM Sans',
+                    fontSize: 30,
+                    fontWeight: 500,
+                    lineHeight: 1.35,
+                    marginBottom: 28,
+                    opacity: 0.85,
+                    maxWidth: '92%',
+                  },
+                  children: popis,
+                },
+              },
               {
                 // Pozn.: kód se na obrázku SCHVÁLNĚ nezobrazuje (i kdyby přišel v query),
                 // aby lidi museli kliknout na web, kde si ho zkopírují.
@@ -221,7 +241,7 @@ function couponTemplate({ obchod, sleva, image }) {
                   children: 'Kód na webu ✦',
                 },
               },
-            ],
+            ].filter(Boolean),
           },
         },
       ],
