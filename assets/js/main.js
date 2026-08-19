@@ -252,6 +252,106 @@ do statického HTML (index, clanky, kupony, clanek).
     apply();
   }
 
+  // ---------- Kvíz "Najdeme vám dárek na míru" (clanky.html) ----------
+  // Napojuje se na už existující filtrování podle kategorie (chip tlačítka) -
+  // po odpovědi jen naklikne odpovídající chip, žádnou novou logiku filtrování
+  // tak nemusíme duplikovat.
+
+  var QUIZ_STEPS = [
+    {
+      question: 'Co právě řešíte?',
+      options: [
+        { label: 'Hledám dárek pro někoho', next: 1 },
+        { label: 'Chci poradit, jak ušetřit', chip: 'Návody' },
+        { label: 'Jen se chci inspirovat', chip: 'Inspirace' },
+      ],
+    },
+    {
+      question: 'Pro koho hledáte dárek?',
+      options: [
+        { label: 'Pro ženu', chip: 'Dárky pro ženy' },
+        { label: 'Pro dítě', chip: 'Dárky pro děti' },
+        { label: 'Pro mazlíčka', chip: 'Dárky pro mazlíčky' },
+        { label: 'Ještě nevím, ukaž mi vše', chip: 'Vše' },
+      ],
+    },
+  ];
+
+  function selectCategoryChip(chipValue, attemptsLeft) {
+    attemptsLeft = attemptsLeft === undefined ? 15 : attemptsLeft;
+    var chipGroup = document.getElementById('chip-group');
+    var target = null;
+    if (chipGroup) {
+      chipGroup.querySelectorAll('.wtb-chip').forEach(function (chip) {
+        if (chip.getAttribute('data-chip') === chipValue) target = chip;
+      });
+    }
+    if (target) {
+      target.click();
+      return true;
+    }
+    // Chipy se plní až po načtení articles.json (async) - pár pokusů počkáme.
+    if (attemptsLeft > 0) {
+      setTimeout(function () { selectCategoryChip(chipValue, attemptsLeft - 1); }, 200);
+    }
+    return false;
+  }
+
+  function renderQuizStep(stepsEl, stepIndex) {
+    var step = QUIZ_STEPS[stepIndex];
+    var totalSteps = QUIZ_STEPS.length;
+    stepsEl.innerHTML =
+      '<div class="wtb-quiz-progress">Otázka ' + (stepIndex + 1) + ' z ' + totalSteps + '</div>' +
+      '<h3 class="wtb-quiz-question">' + escapeHtml(step.question) + '</h3>' +
+      '<div class="wtb-quiz-options">' +
+        step.options.map(function (opt, i) {
+          return '<button type="button" class="wtb-quiz-option" data-opt-index="' + i + '">' + escapeHtml(opt.label) + '</button>';
+        }).join('') +
+      '</div>';
+
+    stepsEl.querySelectorAll('.wtb-quiz-option').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var opt = step.options[parseInt(btn.getAttribute('data-opt-index'), 10)];
+        if (opt.next !== undefined) {
+          renderQuizStep(stepsEl, opt.next);
+        } else {
+          renderQuizResult(stepsEl, opt.chip, opt.label);
+        }
+      });
+    });
+  }
+
+  function renderQuizResult(stepsEl, chipValue, chosenLabel) {
+    selectCategoryChip(chipValue);
+    stepsEl.innerHTML =
+      '<div class="wtb-quiz-result">' +
+        '<div class="wtb-quiz-progress">Hotovo ✦</div>' +
+        '<h3 class="wtb-quiz-question">Ukazujeme vám: ' + escapeHtml(chipValue === 'Vše' ? 'všechny tipy' : chipValue) + '</h3>' +
+        '<p class="wtb-quiz-result-sub">Nabídka níže je už přefiltrovaná. Klidně si vyberte i jinou kategorii ručně.</p>' +
+        '<button type="button" class="wtb-btn-light" id="quizRestartBtn">Zkusit znovu ↺</button>' +
+      '</div>';
+    var restartBtn = document.getElementById('quizRestartBtn');
+    if (restartBtn) {
+      restartBtn.addEventListener('click', function () { renderQuizStep(stepsEl, 0); });
+    }
+    var grid = document.getElementById('article-grid');
+    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function initGiftQuiz() {
+    var card = document.getElementById('giftQuizCard');
+    var startBtn = document.getElementById('quizStartBtn');
+    var intro = document.getElementById('quizIntro');
+    var stepsEl = document.getElementById('quizSteps');
+    if (!card || !startBtn || !intro || !stepsEl) return;
+
+    startBtn.addEventListener('click', function () {
+      intro.hidden = true;
+      stepsEl.hidden = false;
+      renderQuizStep(stepsEl, 0);
+    });
+  }
+
   // ---------- Stránkové inicializace ----------
 
   function initHomePage() {
@@ -376,5 +476,6 @@ do statického HTML (index, clanky, kupony, clanek).
     initCouponsPage();
     initArticlesPage();
     initArticleDetailPage();
+    initGiftQuiz();
   });
 })();
