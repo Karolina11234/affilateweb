@@ -1050,6 +1050,48 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
    CTA pruh a detail článku.
 ============================================ */
 
+/* === GIFT QUIZ (kvíz "Najdeme vám dárek na míru", clanky.html) === */
+.wtb-quiz-card {
+  background: #1a1a26; color: #fbf7ee;
+  border-radius: 28px; padding: 44px 40px;
+  margin-bottom: 34px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.wtb-quiz-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(251,247,238,.1); border: 1px solid rgba(251,247,238,.35);
+  padding: 8px 18px; border-radius: 999px;
+  font-size: .76rem; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; margin-bottom: 18px; color: #f4d56b;
+}
+.wtb-quiz-title { color: #fbf7ee; font-size: 1.7rem; margin-bottom: 10px; }
+.wtb-quiz-sub { color: rgba(251,247,238,.75); max-width: 440px; margin: 0 auto 26px; }
+.wtb-quiz-card .wtb-btn-dark {
+  background: #f4d56b; color: #1a1a26; border-color: #f4d56b;
+}
+.wtb-quiz-card .wtb-btn-dark:hover { background: #fbf7ee; border-color: #fbf7ee; }
+
+.wtb-quiz-steps { max-width: 520px; margin: 0 auto; }
+.wtb-quiz-progress {
+  font-size: .78rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: #8a9e6e; margin-bottom: 14px;
+}
+.wtb-quiz-question { color: #fbf7ee; font-size: 1.4rem; margin-bottom: 22px; }
+.wtb-quiz-options { display: flex; flex-direction: column; gap: 12px; }
+.wtb-quiz-option {
+  background: rgba(251,247,238,.06); border: 1px solid rgba(251,247,238,.3);
+  color: #fbf7ee; padding: 15px 22px; border-radius: 16px;
+  font-family: 'DM Sans', sans-serif; font-size: .96rem; font-weight: 600;
+  cursor: pointer; text-align: left; transition: all .2s ease;
+}
+.wtb-quiz-option:hover { background: #f4d56b; color: #1a1a26; border-color: #f4d56b; transform: translateX(4px); }
+.wtb-quiz-result-sub { color: rgba(251,247,238,.75); margin-bottom: 22px; }
+
+@media (max-width: 640px) {
+  .wtb-quiz-card { padding: 32px 22px; }
+  .wtb-quiz-title { font-size: 1.35rem; }
+}
+
 /* === FILTER BAR (hledání + třídění) === */
 .wtb-filter-bar {
   display: flex; gap: 16px; flex-wrap: wrap;
@@ -1114,7 +1156,7 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
 /* === ARTICLE DETAIL (clanek.html) === */
 .wtb-post-single {
   background: #fbf7ee; border: 1px solid #1a1a26; border-radius: 28px;
-  padding: 56px; max-width: 980px; margin: 0 auto 40px;
+  padding: 56px; max-width: 1120px; margin: 0 auto 40px;
 }
 .wtb-post-single .wtb-card-cat { margin-bottom: 14px; }
 .wtb-post-single h1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); margin-bottom: 14px; }
@@ -1129,6 +1171,10 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
 }
 .wtb-post-single .wtb-post-thumb .wtb-card-thumb-icon { font-size: 4rem; }
 .wtb-post-single .wtb-post-body { color: #2c2c3a; font-size: 1.12rem; line-height: 1.75; }
+/* Clearfix: bez tohohle se plovoucí karty produktů (float) nezapočítávaly do výšky
+   rámečku článku a poslední karta "visela" ven pod okraj - teď se rámeček vždy
+   správně roztáhne kolem všech karet, i na mobilu. */
+.wtb-post-single .wtb-post-body::after { content: ''; display: table; clear: both; }
 .wtb-post-single .wtb-post-body h3 { font-size: 1.5rem; margin-top: 1.4em; }
 .wtb-post-single .wtb-post-body p { margin-bottom: 1.1em; }
 
