@@ -1133,48 +1133,58 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
 .wtb-post-single .wtb-post-body p { margin-bottom: 1.1em; }
 
 /* Fotka + tlačítko Koupit vložené automatizací za každý podnadpis (produkt) v článku.
-   Barevné karty ve stejném "modern retro" stylu jako kupóny - aby to vizuálně
-   táhlo pohled a produkty v článku nepůsobily jako suchý výpis. */
+   Čtvercová karta "vytažená" doprava/doleva ve stylu magazínu - text textu okolo,
+   fotka nahoře jako čtverec na bílé ploše (produktové fotky mívají bílé pozadí),
+   dole barevný pruh s cenou a tlačítkem (stejná paleta jako kupóny). */
 .wtb-inline-product {
-  display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
-  border: 2px solid #1a1a26; border-radius: 22px; padding: 24px;
-  margin: 10px 0 28px;
+  display: flex; flex-direction: column;
+  width: 300px; max-width: 100%;
+  border: 2px solid #1a1a26; border-radius: 22px; overflow: hidden;
+  margin: 6px 0 30px;
   transition: transform .25s ease, box-shadow .25s ease;
 }
 .wtb-inline-product:hover { transform: translateY(-4px); box-shadow: 6px 6px 0 #1a1a26; }
+
+/* Sudé/liché karty se střídavě "vytáhnou" doprava a doleva, text z článku obtéká kolem */
+.wtb-post-body .wtb-inline-product:nth-of-type(odd) { float: right; margin-left: 30px; clear: right; }
+.wtb-post-body .wtb-inline-product:nth-of-type(even) { float: left; margin-right: 30px; clear: left; }
+
 .wtb-inline-product-img {
-  width: 168px; height: 168px; object-fit: contain; border-radius: 16px;
-  background: #fff; border: 1px solid rgba(26,26,38,.15); flex-shrink: 0; padding: 12px;
+  width: 100%; aspect-ratio: 1 / 1; object-fit: contain;
+  background: #fff; border-bottom: 2px solid #1a1a26;
+  padding: 22px; box-sizing: border-box;
 }
 .wtb-inline-product-actions {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 10px; flex: 1;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+  padding: 18px 20px 22px;
 }
 .wtb-inline-product-tag {
   font-family: 'DM Sans', sans-serif; font-size: .72rem; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase; opacity: .7;
 }
 .wtb-btn-buy-inline {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
   background: #1a1a26; color: #fbf7ee; text-decoration: none;
-  padding: 14px 28px; border-radius: 999px;
+  padding: 14px 22px; border-radius: 999px; box-sizing: border-box;
   font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: .92rem;
   letter-spacing: .04em; transition: all .25s ease;
 }
-.wtb-btn-buy-inline:hover { background: #c25a3c; transform: scale(1.04); }
+.wtb-btn-buy-inline:hover { background: #c25a3c; transform: scale(1.03); }
 
-/* Barvy karet se střídají v cyklu (stejná paleta jako u kupónů) podle pořadí produktu v článku */
-.wtb-post-body .wtb-inline-product:nth-of-type(5n+1) { background: #b8c89a; }
-.wtb-post-body .wtb-inline-product:nth-of-type(5n+2) { background: #f4d56b; }
-.wtb-post-body .wtb-inline-product:nth-of-type(5n+3) { background: #a8c2d1; }
-.wtb-post-body .wtb-inline-product:nth-of-type(5n+4) { background: #f0a89a; }
-.wtb-post-body .wtb-inline-product:nth-of-type(5n+5) { background: #c25a3c; color: #fbf7ee; }
+/* Barva spodního pruhu (actions) se střídá v cyklu (stejná paleta jako u kupónů) */
+.wtb-post-body .wtb-inline-product:nth-of-type(5n+1) .wtb-inline-product-actions { background: #b8c89a; }
+.wtb-post-body .wtb-inline-product:nth-of-type(5n+2) .wtb-inline-product-actions { background: #f4d56b; }
+.wtb-post-body .wtb-inline-product:nth-of-type(5n+3) .wtb-inline-product-actions { background: #a8c2d1; }
+.wtb-post-body .wtb-inline-product:nth-of-type(5n+4) .wtb-inline-product-actions { background: #f0a89a; }
+.wtb-post-body .wtb-inline-product:nth-of-type(5n+5) .wtb-inline-product-actions { background: #c25a3c; color: #fbf7ee; }
 .wtb-post-body .wtb-inline-product:nth-of-type(5n+5) .wtb-btn-buy-inline { background: #fbf7ee; color: #1a1a26; }
 .wtb-post-body .wtb-inline-product:nth-of-type(5n+5) .wtb-btn-buy-inline:hover { background: #1a1a26; color: #fbf7ee; }
 
-@media (max-width: 560px) {
-  .wtb-inline-product { flex-direction: column; align-items: stretch; text-align: center; padding: 20px; }
-  .wtb-inline-product-img { width: 100%; height: 200px; align-self: center; }
-  .wtb-inline-product-actions { align-items: center; }
+/* Nadpis dalšího produktu vždy začne pod plovoucí kartou, ne vedle ní */
+.wtb-post-body h3 { clear: both; }
+
+@media (max-width: 720px) {
+  .wtb-post-body .wtb-inline-product { float: none; width: 100%; margin: 20px auto 30px; }
 }
 .wtb-post-back {
   display: inline-flex; align-items: center; gap: 6px;
