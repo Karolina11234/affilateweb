@@ -36,26 +36,6 @@ function pickColor(seed) {
   return PALETTE[hash % PALETTE.length];
 }
 
-// Ozdobný "kosočtverec" nakreslený čistě CSS tvarem (otočený čtverec), NE textovým
-// znakem ✦ - ten v některých fontech (např. DM Sans) chybí a vykreslí se jako
-// prázdný čtvereček ("díra" v textu). Takhle se zobrazí vždy spolehlivě.
-function diamondGlyph(color, size = 20) {
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        width: `${size}px`,
-        height: `${size}px`,
-        background: color,
-        transform: 'rotate(45deg)',
-        borderRadius: '3px',
-        flexShrink: 0,
-      },
-    },
-  };
-}
-
 // ---------- Fonty s podporou české diakritiky ----------
 async function loadGoogleFont(family, weight, text) {
   const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
@@ -241,13 +221,16 @@ function couponTemplate({ obchod, sleva, image, popis }) {
               {
                 // Pozn.: kód se na obrázku SCHVÁLNĚ nezobrazuje (i kdyby přišel v query),
                 // aby lidi museli kliknout na web, kde si ho zkopírují.
+                // Pozn. 2: hvězdička je vykreslená jako tvar (ne textový znak ✦), protože
+                // ten glyf chybí v subsetu fontu DM Sans a dřív se místo něj zobrazoval
+                // prázdný čtvereček ("tofu box").
                 type: 'div',
                 props: {
                   style: {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '14px',
+                    gap: '16px',
                     background: INK,
                     color: CARD,
                     borderRadius: '999px',
@@ -260,8 +243,21 @@ function couponTemplate({ obchod, sleva, image, popis }) {
                     alignSelf: 'flex-start',
                   },
                   children: [
-                    { type: 'div', props: { style: { display: 'flex' }, children: 'Kód na webu' } },
-                    diamondGlyph(CARD, 16),
+                    { type: 'div', props: { children: 'Kód na webu' } },
+                    {
+                      type: 'div',
+                      props: {
+                        style: {
+                          display: 'flex',
+                          width: '18px',
+                          height: '18px',
+                          background: CARD,
+                          transform: 'rotate(45deg)',
+                          borderRadius: '3px',
+                          flexShrink: 0,
+                        },
+                      },
+                    },
                   ],
                 },
               },
@@ -326,8 +322,12 @@ function cardTemplate({ heading, image, eyebrow, seed }) {
             style: {
               display: 'flex',
               marginTop: 30,
+              width: '22px',
+              height: '22px',
+              background: image ? INK : color.text,
+              transform: 'rotate(45deg)',
+              borderRadius: '4px',
             },
-            children: diamondGlyph(image ? '#c25a3c' : color.text, 22),
           },
         },
       ].filter(Boolean),
