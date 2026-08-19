@@ -252,106 +252,6 @@ do statického HTML (index, clanky, kupony, clanek).
     apply();
   }
 
-  // ---------- Kvíz "Najdeme vám dárek na míru" (clanky.html) ----------
-  // Napojuje se na už existující filtrování podle kategorie (chip tlačítka) -
-  // po odpovědi jen naklikne odpovídající chip, žádnou novou logiku filtrování
-  // tak nemusíme duplikovat.
-
-  var QUIZ_STEPS = [
-    {
-      question: 'Co právě řešíte?',
-      options: [
-        { label: 'Hledám dárek pro někoho', next: 1 },
-        { label: 'Chci poradit, jak ušetřit', chip: 'Návody' },
-        { label: 'Jen se chci inspirovat', chip: 'Inspirace' },
-      ],
-    },
-    {
-      question: 'Pro koho hledáte dárek?',
-      options: [
-        { label: 'Pro ženu', chip: 'Dárky pro ženy' },
-        { label: 'Pro dítě', chip: 'Dárky pro děti' },
-        { label: 'Pro mazlíčka', chip: 'Dárky pro mazlíčky' },
-        { label: 'Ještě nevím, ukaž mi vše', chip: 'Vše' },
-      ],
-    },
-  ];
-
-  function selectCategoryChip(chipValue, attemptsLeft) {
-    attemptsLeft = attemptsLeft === undefined ? 15 : attemptsLeft;
-    var chipGroup = document.getElementById('chip-group');
-    var target = null;
-    if (chipGroup) {
-      chipGroup.querySelectorAll('.wtb-chip').forEach(function (chip) {
-        if (chip.getAttribute('data-chip') === chipValue) target = chip;
-      });
-    }
-    if (target) {
-      target.click();
-      return true;
-    }
-    // Chipy se plní až po načtení articles.json (async) - pár pokusů počkáme.
-    if (attemptsLeft > 0) {
-      setTimeout(function () { selectCategoryChip(chipValue, attemptsLeft - 1); }, 200);
-    }
-    return false;
-  }
-
-  function renderQuizStep(stepsEl, stepIndex) {
-    var step = QUIZ_STEPS[stepIndex];
-    var totalSteps = QUIZ_STEPS.length;
-    stepsEl.innerHTML =
-      '<div class="wtb-quiz-progress">Otázka ' + (stepIndex + 1) + ' z ' + totalSteps + '</div>' +
-      '<h3 class="wtb-quiz-question">' + escapeHtml(step.question) + '</h3>' +
-      '<div class="wtb-quiz-options">' +
-        step.options.map(function (opt, i) {
-          return '<button type="button" class="wtb-quiz-option" data-opt-index="' + i + '">' + escapeHtml(opt.label) + '</button>';
-        }).join('') +
-      '</div>';
-
-    stepsEl.querySelectorAll('.wtb-quiz-option').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var opt = step.options[parseInt(btn.getAttribute('data-opt-index'), 10)];
-        if (opt.next !== undefined) {
-          renderQuizStep(stepsEl, opt.next);
-        } else {
-          renderQuizResult(stepsEl, opt.chip, opt.label);
-        }
-      });
-    });
-  }
-
-  function renderQuizResult(stepsEl, chipValue, chosenLabel) {
-    selectCategoryChip(chipValue);
-    stepsEl.innerHTML =
-      '<div class="wtb-quiz-result">' +
-        '<div class="wtb-quiz-progress">Hotovo ✦</div>' +
-        '<h3 class="wtb-quiz-question">Ukazujeme vám: ' + escapeHtml(chipValue === 'Vše' ? 'všechny tipy' : chipValue) + '</h3>' +
-        '<p class="wtb-quiz-result-sub">Nabídka níže je už přefiltrovaná. Klidně si vyberte i jinou kategorii ručně.</p>' +
-        '<button type="button" class="wtb-btn-light" id="quizRestartBtn">Zkusit znovu ↺</button>' +
-      '</div>';
-    var restartBtn = document.getElementById('quizRestartBtn');
-    if (restartBtn) {
-      restartBtn.addEventListener('click', function () { renderQuizStep(stepsEl, 0); });
-    }
-    var grid = document.getElementById('article-grid');
-    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function initGiftQuiz() {
-    var card = document.getElementById('giftQuizCard');
-    var startBtn = document.getElementById('quizStartBtn');
-    var intro = document.getElementById('quizIntro');
-    var stepsEl = document.getElementById('quizSteps');
-    if (!card || !startBtn || !intro || !stepsEl) return;
-
-    startBtn.addEventListener('click', function () {
-      intro.hidden = true;
-      stepsEl.hidden = false;
-      renderQuizStep(stepsEl, 0);
-    });
-  }
-
   // ---------- Stránkové inicializace ----------
 
   function initHomePage() {
@@ -466,6 +366,158 @@ do statického HTML (index, clanky, kupony, clanek).
     }).catch(function () {
       container.innerHTML = '<p class="wtb-empty-state">Článek se nepodařilo načíst.</p>';
     });
+  }
+
+  // ---------- Kvíz „Nevíte, jaký dárek vybrat?" (clanky.html) ----------
+
+  var QUIZ_PERSONAS = [
+    { key: 'pets', emoji: '🐾', label: 'Mazlíčka', keywords: ['mazlíč', 'pes', 'psa', 'psy', 'psí', 'kočk', 'zvíř'] },
+    { key: 'women', emoji: '💐', label: 'Ženu', keywords: ['žen', 'dámu', 'přítelkyni', 'manželku', 'mamink', 'babičk'] },
+    { key: 'men', emoji: '🎩', label: 'Muže', keywords: ['muž', 'pána', 'tátu', 'tatínk', 'manžela', 'přítele', 'dědečk'] },
+    { key: 'kids', emoji: '🧸', label: 'Dítě', keywords: ['dít', 'děti', 'dětí', 'kluka', 'holčičk', 'chlapc'] },
+    { key: 'any', emoji: '✦', label: 'Nevím, cokoliv', keywords: [] },
+  ];
+
+  var QUIZ_BUDGETS = [
+    { key: 'low', label: 'Do 300 Kč', test: function (p) { return p !== null && p <= 300; } },
+    { key: 'mid', label: '300–800 Kč', test: function (p) { return p !== null && p > 300 && p <= 800; } },
+    { key: 'high', label: 'Nad 800 Kč', test: function (p) { return p !== null && p > 800; } },
+    { key: 'any', label: 'Nezáleží', test: function () { return true; } },
+  ];
+
+  // Odhadne nejnižší cenu zmíněnou v článku (štítky "Od 271 Kč" u produktů) -
+  // není to přesný filtr podle rozpočtu na celý web, ale dobrý odhad pro doporučení.
+  function extractMinPrice(bodyHtml) {
+    if (!bodyHtml) return null;
+    var matches = bodyHtml.match(/Od\s+(\d[\d\s]*)\s*Kč/gi);
+    if (!matches || !matches.length) return null;
+    var nums = matches.map(function (m) {
+      var n = m.match(/(\d[\d\s]*)/);
+      return n ? parseInt(n[1].replace(/\s/g, ''), 10) : null;
+    }).filter(function (n) { return n !== null && !isNaN(n); });
+    return nums.length ? Math.min.apply(null, nums) : null;
+  }
+
+  // Hledá klíčové slovo jen na začátku slova (ne jako podřetězec uprostřed jiného slova) -
+  // bez tohohle by např. "žen" chytilo i "peněženku" a doporučení by pak dávalo smysl.
+  function keywordHit(haystack, keyword) {
+    var idx = haystack.indexOf(keyword);
+    while (idx !== -1) {
+      var before = idx === 0 ? '' : haystack.charAt(idx - 1);
+      if (!/[a-zěščřžýáíéůúťďňó]/i.test(before)) return true;
+      idx = haystack.indexOf(keyword, idx + 1);
+    }
+    return false;
+  }
+
+  function quizRecommend(articles, personaKey, budgetKey) {
+    var persona = QUIZ_PERSONAS.filter(function (p) { return p.key === personaKey; })[0];
+    var budget = QUIZ_BUDGETS.filter(function (b) { return b.key === budgetKey; })[0];
+
+    var scored = articles.map(function (a) {
+      var haystack = ((a.category || '') + ' ' + (a.title || '') + ' ' + (a.excerpt || '')).toLowerCase();
+      var personaHit = personaKey === 'any' || persona.keywords.some(function (k) { return keywordHit(haystack, k); });
+      var price = extractMinPrice(a.body);
+      var budgetHit = budgetKey !== 'any' && price !== null && budget.test(price);
+      var score = (personaHit ? 2 : 0) + (budgetHit ? 1 : 0);
+      return { article: a, score: score, personaHit: personaHit };
+    });
+
+    var withPersona = scored.filter(function (s) { return s.personaHit; });
+    var pool = withPersona.length ? withPersona : scored; // nic nesedí přesně -> ukaž aspoň něco
+
+    pool.sort(function (a, b) {
+      if (b.score !== a.score) return b.score - a.score;
+      return parseDateSafe(b.article.date) - parseDateSafe(a.article.date);
+    });
+
+    return pool.slice(0, 3).map(function (s) { return s.article; });
+  }
+
+  function initGiftQuiz() {
+    var trigger = document.getElementById('wtb-quiz-trigger');
+    var overlay = document.getElementById('wtb-quiz-overlay');
+    var closeBtn = document.getElementById('wtb-quiz-close');
+    var content = document.getElementById('wtb-quiz-content');
+    if (!trigger || !overlay || !content) return;
+
+    var articlesCache = null;
+    var answers = { persona: null, budget: null };
+
+    function optionsHtml(items, labelKey, emojiKey) {
+      return '<div class="wtb-quiz-options">' + items.map(function (it) {
+        return '<button type="button" class="wtb-quiz-option" data-key="' + escapeHtml(it.key) + '">' +
+          (it[emojiKey] ? '<span class="wtb-quiz-option-emoji">' + it[emojiKey] + '</span>' : '') +
+          '<span>' + escapeHtml(it[labelKey]) + '</span>' +
+          '</button>';
+      }).join('') + '</div>';
+    }
+
+    function renderStep1() {
+      content.innerHTML =
+        '<div class="wtb-quiz-step-label">Krok 1 ze 2</div>' +
+        '<h3 class="wtb-quiz-question">Pro koho hledáte dárek?</h3>' +
+        optionsHtml(QUIZ_PERSONAS, 'label', 'emoji');
+      content.querySelectorAll('.wtb-quiz-option').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          answers.persona = btn.getAttribute('data-key');
+          renderStep2();
+        });
+      });
+    }
+
+    function renderStep2() {
+      content.innerHTML =
+        '<button type="button" class="wtb-quiz-back" id="wtb-quiz-back">← Zpět</button>' +
+        '<div class="wtb-quiz-step-label">Krok 2 ze 2</div>' +
+        '<h3 class="wtb-quiz-question">Jaký je přibližný rozpočet?</h3>' +
+        optionsHtml(QUIZ_BUDGETS, 'label', null);
+      document.getElementById('wtb-quiz-back').addEventListener('click', renderStep1);
+      content.querySelectorAll('.wtb-quiz-option').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          answers.budget = btn.getAttribute('data-key');
+          renderResults();
+        });
+      });
+    }
+
+    function renderResults() {
+      content.innerHTML = '<div class="wtb-quiz-step-label">Vaše doporučení</div><h3 class="wtb-quiz-question">Hledám ty pravé tipy…</h3>';
+      var articlesPromise = articlesCache ? Promise.resolve(articlesCache) : fetchJson(DATA_ARTICLES);
+      articlesPromise.then(function (articles) {
+        articlesCache = articles || [];
+        var recommended = quizRecommend(articlesCache, answers.persona, answers.budget);
+        content.innerHTML =
+          '<button type="button" class="wtb-quiz-back" id="wtb-quiz-back">← Zpět</button>' +
+          '<div class="wtb-quiz-step-label">Vaše doporučení</div>' +
+          '<h3 class="wtb-quiz-question">Tohle by se mohlo hodit ✦</h3>' +
+          '<div class="wtb-quiz-results-grid">' + recommended.map(articleCardHtml).join('') + '</div>' +
+          '<button type="button" class="wtb-quiz-retry" id="wtb-quiz-retry">↺ Zkusit znovu</button>';
+        document.getElementById('wtb-quiz-back').addEventListener('click', renderStep2);
+        document.getElementById('wtb-quiz-retry').addEventListener('click', function () {
+          answers = { persona: null, budget: null };
+          renderStep1();
+        });
+      }).catch(function () {
+        content.innerHTML = '<p class="wtb-empty-state">Doporučení se teď nepodařilo načíst, zkuste to prosím znovu.</p>';
+      });
+    }
+
+    function openQuiz() {
+      answers = { persona: null, budget: null };
+      renderStep1();
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeQuiz() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    trigger.addEventListener('click', openQuiz);
+    closeBtn.addEventListener('click', closeQuiz);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeQuiz(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && overlay.classList.contains('open')) closeQuiz(); });
   }
 
   // ---------- Start ----------
