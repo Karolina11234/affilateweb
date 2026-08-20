@@ -1,6 +1,6 @@
 [
   {
-    "id": 1787165204292,
+    "id": 1787250441032,
     "brand": "Fajnspánek.cz",
     "code": "AF4587",
     "discount": 0.04,
@@ -44,15 +44,6 @@
     "code": "ALZA500",
     "until": "2026-08-25",
     "color": "butter",
-    "url": "#"
-  },
-  {
-    "id": 3,
-    "brand": "Zoot",
-    "discount": "15 %",
-    "code": "ZOOT15",
-    "until": "2026-08-20",
-    "color": "blue",
     "url": "#"
   },
   {
