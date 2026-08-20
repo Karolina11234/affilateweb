@@ -1,1 +1,6 @@
-{}
+{
+  "rewrites": [
+    { "source": "/clanek.html", "destination": "/api/clanek" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+  ]
+}
