@@ -106,11 +106,37 @@ export default async function handler(req, res) {
       '<meta name="description" content="' + descEsc + '">'
     );
 
-    // Vlož Open Graph / Twitter Card tagy a canonical odkaz před </head>
+    // Strukturovaná data (schema.org) pro Google - jen pokud známe konkrétní článek
+    var articleSchemaTag = '';
+    if (article) {
+      var articleSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: article.title,
+        description: description,
+        image: [image],
+        datePublished: article.date || undefined,
+        dateModified: article.date || undefined,
+        author: { '@type': 'Organization', name: siteName },
+        publisher: {
+          '@type': 'Organization',
+          name: siteName,
+          logo: { '@type': 'ImageObject', url: origin + '/api/og?title=' + encodeURIComponent(siteName) }
+        },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+        articleSection: article.category || undefined
+      };
+      articleSchemaTag = '<script type="application/ld+json">' +
+        JSON.stringify(articleSchema).replace(/</g, '\\u003c') +
+        '</script>\n';
+    }
+
+    // Vlož Open Graph / Twitter Card tagy, canonical odkaz a schema.org před </head>
     var extraTags =
       '<link rel="canonical" href="' + urlEsc + '">\n' +
       '<meta property="og:type" content="article">\n' +
       '<meta property="og:site_name" content="' + siteName + '">\n' +
+      '<meta property="og:locale" content="cs_CZ">\n' +
       '<meta property="og:title" content="' + titleEsc + '">\n' +
       '<meta property="og:description" content="' + descEsc + '">\n' +
       '<meta property="og:image" content="' + imageEsc + '">\n' +
@@ -119,6 +145,7 @@ export default async function handler(req, res) {
       '<meta name="twitter:title" content="' + titleEsc + '">\n' +
       '<meta name="twitter:description" content="' + descEsc + '">\n' +
       '<meta name="twitter:image" content="' + imageEsc + '">\n' +
+      articleSchemaTag +
       '</head>';
 
     html = html.replace('</head>', extraTags);
