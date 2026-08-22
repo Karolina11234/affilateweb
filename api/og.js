@@ -70,7 +70,12 @@ export default async function handler(req) {
       jsx = couponTemplate({ obchod, sleva, image, popis });
     } else if (title) {
       allText = `${category}${title}TIP NA DÁREK`;
-      jsx = cardTemplate({ heading: title, image, eyebrow: category || 'TIP NA DÁREK', seed: title });
+      // Nový článek: pokud máme tematickou fotku, použijeme ji na celou plochu (ztmavenou/
+      // utlumenou přes gradient, aby text zůstal čitelný) - vizuálně se tak odliší od
+      // karuselových tipů (které mají fotku jen jako menší orámovaný prvek nahoře).
+      jsx = image
+        ? articleAnnouncementTemplate({ heading: title, image, eyebrow: category || 'NOVÝ ČLÁNEK', seed: title })
+        : cardTemplate({ heading: title, image, eyebrow: category || 'TIP NA DÁREK', seed: title });
     } else if (text) {
       allText = `${text}`;
       jsx = cardTemplate({ heading: text, image, eyebrow: '', seed: text });
@@ -262,6 +267,154 @@ function couponTemplate({ obchod, sleva, image, popis }) {
                 },
               },
             ].filter(Boolean),
+          },
+        },
+      ],
+    },
+  };
+}
+
+// ---------- Nový článek - fotka na celou plochu (1080x1080) ----------
+// Tematická fotka z Pexels vyplňuje celou kartu, přes ni tmavý gradient (shora čirý,
+// dole skoro plně tmavý), na něm nahoře štítek kategorie a dole velký nadpis bílým
+// písmem. Cíleně jiný vzhled než karuselové tipy, aby se příspěvky na Instagramu
+// vizuálně nestřídaly pořád ve stejném layoutu.
+function articleAnnouncementTemplate({ heading, image, eyebrow, seed }) {
+  const color = pickColor(seed);
+  return {
+    type: 'div',
+    props: {
+      style: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+        background: CREAM,
+        padding: '48px',
+      },
+      children: [
+        {
+          type: 'div',
+          props: {
+            style: {
+              display: 'flex',
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              border: `4px solid ${INK}`,
+              borderRadius: '48px',
+              overflow: 'hidden',
+            },
+            children: [
+              {
+                type: 'img',
+                props: {
+                  src: image,
+                  style: {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  },
+                },
+              },
+              {
+                // Tmavý gradient přes fotku - nahoře skoro čirý, dole tmavý, ať je bílý text
+                // vždy dobře čitelný nezávisle na tom, jak je fotka sama o sobě světlá/tmavá.
+                type: 'div',
+                props: {
+                  style: {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    background: 'linear-gradient(180deg, rgba(26,26,38,0.12) 0%, rgba(26,26,38,0.32) 45%, rgba(26,26,38,0.88) 78%, rgba(26,26,38,0.95) 100%)',
+                  },
+                },
+              },
+              {
+                type: 'div',
+                props: {
+                  style: {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    padding: '56px 64px',
+                  },
+                  children: [
+                    {
+                      type: 'div',
+                      props: {
+                        style: {
+                          display: 'flex',
+                          alignSelf: 'flex-start',
+                          alignItems: 'center',
+                          background: color.bg,
+                          color: color.text,
+                          border: `3px solid ${INK}`,
+                          borderRadius: '999px',
+                          padding: '14px 30px',
+                          fontFamily: 'DM Sans',
+                          fontSize: 26,
+                          fontWeight: 700,
+                          letterSpacing: 4,
+                          textTransform: 'uppercase',
+                        },
+                        children: eyebrow,
+                      },
+                    },
+                    {
+                      type: 'div',
+                      props: {
+                        style: {
+                          display: 'flex',
+                          flexDirection: 'column',
+                        },
+                        children: [
+                          {
+                            type: 'div',
+                            props: {
+                              style: {
+                                fontFamily: 'Fraunces',
+                                fontSize: 66,
+                                fontWeight: 700,
+                                lineHeight: 1.14,
+                                letterSpacing: -1,
+                                color: '#ffffff',
+                              },
+                              children: heading,
+                            },
+                          },
+                          {
+                            type: 'div',
+                            props: {
+                              style: {
+                                display: 'flex',
+                                marginTop: 26,
+                                width: '22px',
+                                height: '22px',
+                                background: '#ffffff',
+                                transform: 'rotate(45deg)',
+                                borderRadius: '4px',
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
           },
         },
       ],
