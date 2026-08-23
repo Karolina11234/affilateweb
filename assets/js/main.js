@@ -95,8 +95,25 @@ do statického HTML (index, clanky, kupony, clanek).
     var brand = escapeHtml(coupon.brand || 'Slevový kód');
     var code = escapeHtml(coupon.code || '');
     var discount = escapeHtml(formatDiscount(coupon.discount));
+    var statusHtml = '';
+    if (coupon.until) {
+      var dnes = new Date();
+      dnes.setHours(0, 0, 0, 0);
+      var doKdy = new Date(coupon.until);
+      var dnyZbyva = Math.ceil((doKdy - dnes) / 86400000);
+      var statusClass = 'ok';
+      var statusText = 'Platí';
+      if (dnyZbyva < 0) {
+        statusClass = 'expired';
+        statusText = 'Vypršelo';
+      } else if (dnyZbyva <= 14) {
+        statusClass = 'soon';
+        statusText = 'Brzy končí';
+      }
+      statusHtml = '<span class="wtb-coupon-status wtb-coupon-status-' + statusClass + '">' + statusText + '</span>';
+    }
     var untilHtml = coupon.until
-      ? '<span class="wtb-coupon-until">Platí do ' + escapeHtml(formatDateCz(coupon.until)) + '</span>'
+      ? '<span class="wtb-coupon-until">' + statusHtml + 'Platí do ' + escapeHtml(formatDateCz(coupon.until)) + '</span>'
       : '<span class="wtb-coupon-until"></span>';
     var link = coupon.url && coupon.url !== '#' ? coupon.url : null;
     var descHtml = coupon.description
