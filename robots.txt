@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://affilateweb.vercel.app/sitemap.xml
+Sitemap: https://waytobuy.cz/sitemap.xml
