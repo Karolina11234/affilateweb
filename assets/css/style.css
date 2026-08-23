@@ -21,6 +21,7 @@ URL:         waytobuy.cz
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { margin: 0; padding: 0; overflow-x: hidden; }
+body.wtb-no-scroll { overflow: hidden; }
 body {
   font-family: 'DM Sans', sans-serif;
   font-size: 16px; line-height: 1.55;
@@ -97,8 +98,9 @@ img { max-width: 100%; height: auto; display: block; border-radius: 18px; }
 .wtb-hamburger {
   display: none;
   flex-direction: column; gap: 5px;
+  align-items: center; justify-content: center;
   background: none; border: none; cursor: pointer;
-  padding: 6px; z-index: 200;
+  width: 44px; height: 44px; padding: 6px; z-index: 200;
 }
 .wtb-hamburger span {
   display: block; width: 24px; height: 2px;
@@ -890,7 +892,7 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
   width: 100%; padding: 13px 16px;
   border: 1px solid #1a1a26; background: #faf6ec;
   border-radius: 14px; font-family: 'DM Sans', sans-serif;
-  font-size: .95rem; color: #1a1a26;
+  font-size: 1rem; color: #1a1a26;
   outline: none; transition: all .3s ease;
 }
 .wtb-contact-form input:focus, .wtb-contact-form textarea:focus {
@@ -1167,6 +1169,7 @@ body:not(.item-view) .wtb-sidebar { display: none !important; }
   width: 100%; aspect-ratio: 1 / 1; object-fit: contain;
   background: #fff; border-bottom: 2px solid #1a1a26;
   padding: 22px; box-sizing: border-box;
+  border-radius: 0;
 }
 .wtb-inline-product-actions {
   display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
