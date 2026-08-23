@@ -74,10 +74,14 @@ do statického HTML (index, clanky, kupony, clanek).
     function open() {
       nav.classList.add('open');
       btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('wtb-no-scroll');
     }
     function close() {
       nav.classList.remove('open');
       btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('wtb-no-scroll');
     }
     btn.addEventListener('click', function () {
       nav.classList.contains('open') ? close() : open();
@@ -85,6 +89,9 @@ do statického HTML (index, clanky, kupony, clanek).
     if (closeBtn) closeBtn.addEventListener('click', close);
     nav.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('open')) close();
     });
   }
 
