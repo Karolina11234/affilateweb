@@ -38,13 +38,22 @@ function pickColor(seed) {
 
 // ---------- Fonty s podporou české diakritiky ----------
 async function loadGoogleFont(family, weight, text) {
+  // Pozn.: Google Fonts API i s parametrem &text= (které omezuje font jen na použité znaky)
+  // umí vrátit VÍC než jeden @font-face blok najednou (typicky rozdělený podle rozsahu
+  // znaků - např. samostatně "latin" pro obyčejná písmena a samostatně "latin-ext" pro
+  // znaky s diakritikou). Dřív se bral jen PRVNÍ nalezený blok, takže se v části textu
+  // (třeba běžná velká písmena bez diakritiky) chybějící znaky nahradily záložním fontem -
+  // to je přesně ta nesourodá tloušťka písma. Teď se stáhnou VŠECHNY nalezené bloky a všechny
+  // se předají do ImageResponse jako samostatné zdroje téhož fontu/řezu - engine si pak
+  // pro každý znak sám vybere ten soubor, který ho skutečně obsahuje.
   const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(cssUrl)).text();
-  const match = css.match(/src: url\(([^)]+)\) format\('(opentype|truetype)'\)/) ||
-                css.match(/src: url\(([^)]+)\)/);
-  if (!match) throw new Error(`Nepodařilo se najít font ${family} v Google Fonts CSS.`);
-  const fontRes = await fetch(match[1]);
-  return await fontRes.arrayBuffer();
+  const urls = [...css.matchAll(/src: url\(([^)]+)\)/g)].map((m) => m[1]);
+  if (!urls.length) throw new Error(`Nepodařilo se najít font ${family} v Google Fonts CSS.`);
+  return Promise.all(urls.map(async (url) => {
+    const fontRes = await fetch(url);
+    return await fontRes.arrayBuffer();
+  }));
 }
 
 export default async function handler(req) {
@@ -83,23 +92,23 @@ export default async function handler(req) {
       return new Response('Chybí povinné parametry (title / text / obchod+sleva).', { status: 400 });
     }
 
-    const charset = allText + 'ěščřžýáíéůúťďňóĚŠČŘŽÝÁÍÉŮÚŤĎŇÓ0123456789% Kč';
+    const charset = allText + 'ěščřžýáíéůúťďňóĚŠČŘŽÝÁÍÉŮÚŤĎŇÓ0123456789% KčABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-    const [frauncesBold, dmSansBold, dmSansMedium] = await Promise.all([
+    const [frauncesBoldBuffers, dmSansBoldBuffers, dmSansMediumBuffers] = await Promise.all([
       loadGoogleFont('Fraunces', 700, charset),
       loadGoogleFont('DM+Sans', 700, charset),
       loadGoogleFont('DM+Sans', 500, charset),
     ]);
 
-    return new ImageResponse(jsx, {
-      width,
-      height,
-      fonts: [
-        { name: 'Fraunces', data: frauncesBold, weight: 700, style: 'normal' },
-        { name: 'DM Sans', data: dmSansBold, weight: 700, style: 'normal' },
-        { name: 'DM Sans', data: dmSansMedium, weight: 500, style: 'normal' },
-      ],
-    });
+    // Každý font/řez může mít víc datových souborů (viz pozn. v loadGoogleFont) -
+    // všechny se zaregistrují pod stejným name/weight/style.
+    const fonts = [
+      ...frauncesBoldBuffers.map((data) => ({ name: 'Fraunces', data, weight: 700, style: 'normal' })),
+      ...dmSansBoldBuffers.map((data) => ({ name: 'DM Sans', data, weight: 700, style: 'normal' })),
+      ...dmSansMediumBuffers.map((data) => ({ name: 'DM Sans', data, weight: 500, style: 'normal' })),
+    ];
+
+    return new ImageResponse(jsx, { width, height, fonts });
   } catch (err) {
     return new Response(`Chyba generátoru obrázků: ${err.message}`, { status: 500 });
   }
