@@ -60,14 +60,14 @@
       <a href="kontakt.html">Kontakt</a>
     </nav>
     <a class="wtb-cta" href="clanky.html"><span class="wtb-cta-dot"></span> Najít dárek</a>
-    <button aria-label="Menu" class="wtb-hamburger" id="wtbHamburger">
+    <button aria-label="Menu" aria-expanded="false" aria-controls="wtbMobileNav" class="wtb-hamburger" id="wtbHamburger">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
 
-<div class="wtb-mobile-nav" id="wtbMobileNav">
-  <button class="wtb-mobile-close" id="wtbMobileClose">✕</button>
+<div class="wtb-mobile-nav" id="wtbMobileNav" role="dialog" aria-modal="true" aria-label="Hlavní menu">
+  <button class="wtb-mobile-close" id="wtbMobileClose" aria-label="Zavřít menu">✕</button>
   <a href="index.html">Domů</a>
   <a href="clanky.html">Články</a>
   <a href="kupony.html">Kupóny a slevy</a>
@@ -118,14 +118,6 @@
     <p class="wtb-empty-state">Načítám kupóny…</p>
   </div>
 
-  <div class="wtb-cta-band">
-    <h2>Začni šetřit <em>ještě dnes</em> ✦</h2>
-    <p>Nové kupóny a dárkové tipy rovnou do schránky — bez spamu, jen to nejlepší.</p>
-    <div class="wtb-cta-band__actions">
-      <a href="kontakt.html" class="wtb-btn-light">📩 Napsat nám</a>
-      <a href="o-nas.html" class="wtb-btn-dark" style="border-color:rgba(251,247,238,0.4)">O projektu</a>
-    </div>
-  </div>
 </div>
 
 <footer class="wtb-footer">

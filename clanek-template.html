@@ -27,14 +27,14 @@
       <a href="kontakt.html">Kontakt</a>
     </nav>
     <a class="wtb-cta" href="kupony.html"><span class="wtb-cta-dot"></span> Objevit slevy</a>
-    <button aria-label="Menu" class="wtb-hamburger" id="wtbHamburger">
+    <button aria-label="Menu" aria-expanded="false" aria-controls="wtbMobileNav" class="wtb-hamburger" id="wtbHamburger">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
 
-<div class="wtb-mobile-nav" id="wtbMobileNav">
-  <button class="wtb-mobile-close" id="wtbMobileClose">✕</button>
+<div class="wtb-mobile-nav" id="wtbMobileNav" role="dialog" aria-modal="true" aria-label="Hlavní menu">
+  <button class="wtb-mobile-close" id="wtbMobileClose" aria-label="Zavřít menu">✕</button>
   <a href="index.html">Domů</a>
   <a href="clanky.html">Články</a>
   <a href="kupony.html">Kupóny a slevy</a>
