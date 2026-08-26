@@ -341,7 +341,7 @@ do statického HTML (index, clanky, kupony, clanek).
       initFilterableList({
         items: articles || [],
         groupKey: 'category',
-        searchKeys: ['title', 'excerpt', 'category'],
+        searchKeys: ['title', 'excerpt', 'category', 'tags'],
         chipGroup: chipGroup,
         sortSelect: sortSelect,
         searchInput: searchInput,
