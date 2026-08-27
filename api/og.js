@@ -7,10 +7,20 @@
 //   ?title=...&image=...&category=...            -> obrázek k blogovému článku / karuselu (1080x1080)
 //   ?kod=...&sleva=...&obchod=...&image=...       -> slevový kupón (1080x1080)
 //   ?text=...&image=...                           -> karuselový snímek (1080x1080), image je volitelný
+//   ...&ratio=story                                -> stejný obsah, ale ve formátu 1080x1920 (Instagram Stories)
 //
 // Princip: fotka produktu (pokud existuje) je vždy jen MENŠÍ orámovaný prvek uvnitř karty,
 // nikdy není na celou plochu na pozadí - i nepovedená/nesouvisející fotka tak vypadá
 // jako součást designu a text zůstává vždy čitelný.
+//
+// OPRAVA (fotky ve Stories v aplikaci vypadaly moc "zvětšené"/oříznuté): dřív
+// se pro Stories posílal úplně stejný čtvercový 1080x1080 obrázek jako do FB/IG
+// feedu a na web. Instagram Stories má ale formát na výšku 9:16 a čtvercovou
+// fotku si sám v appce ořízne/přiblíží, aby vyplnila celou obrazovku (v
+// prohlížeči to vidět není, tam se čtverec zobrazí celý). Nový parametr
+// ?ratio=story přepne jen výšku plátna na 1920px (na 9:16) - karty používají
+// procentuální rozměry, takže se do vyššího plátna přirozeně vejdou beze
+// změny layoutu a bez nutnosti cokoliv na appce/Instagramu ořezávat.
 
 import { ImageResponse } from '@vercel/og';
 
@@ -83,10 +93,13 @@ export default async function handler(req) {
     const popis = searchParams.get('popis') || '';
     const category = searchParams.get('category') || searchParams.get('kategorie') || '';
     const image = searchParams.get('image') || '';
+    const ratio = searchParams.get('ratio') || searchParams.get('format') || '';
 
     let jsx;
     const width = 1080;
-    const height = 1080;
+    // ?ratio=story -> vertikální 1080x1920 (Instagram Stories, 9:16) místo
+    // výchozího čtverce 1080x1080 (web/FB/IG feed) - viz poznámka výše.
+    const height = ratio === 'story' ? 1920 : 1080;
     let allText;
 
     if (obchod || sleva) {
