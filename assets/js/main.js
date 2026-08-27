@@ -13,7 +13,30 @@ do statického HTML (index, clanky, kupony, clanek).
   var DATA_COUPONS = 'data/coupons.json';
   var COUPON_COLORS = ['sage', 'butter', 'blue', 'coral', 'terracotta'];
 
+  // Pevný seznam skupin "pro koho" - musí sedět se seznamem v n8n (uzel
+  // "Vybrat kampaň dne"), který normalizuje sloupec "Tagy" ze Sheetu
+  // na tyhle stejné slugy (malá písmena, bez diakritiky).
+  var PERSON_TAGS = [
+    { slug: 'maminka', label: 'Pro maminku' },
+    { slug: 'tatinek', label: 'Pro tatínka' },
+    { slug: 'babicka', label: 'Pro babičku' },
+    { slug: 'dedecek', label: 'Pro dědečka' },
+    { slug: 'partner', label: 'Pro partnera / manžela' },
+    { slug: 'partnerka', label: 'Pro partnerku / manželku' },
+    { slug: 'sourozenci', label: 'Pro sourozence' },
+    { slug: 'kamaradi', label: 'Pro kamarády' },
+    { slug: 'kolegove', label: 'Pro kolegy' },
+    { slug: 'deti', label: 'Pro děti a miminka' },
+  ];
+
   // ---------- Pomocné funkce ----------
+
+  function normalizeTag(str) {
+    return String(str || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // odstraní diakritiku
+  }
 
   function escapeHtml(str) {
     if (str === null || str === undefined) return '';
@@ -219,16 +242,19 @@ do statického HTML (index, clanky, kupony, clanek).
   // ---------- Filtrování / řazení (společné pro clanky.html a kupony.html) ----------
 
   function initFilterableList(opts) {
-    // opts: { items, groupKey, render, container, chipGroup, searchInput, sortSelect, searchKeys, sortOptions }
-    var state = { query: '', activeChip: 'Vše', sort: opts.sortOptions[0].value };
+    // opts: { items, groupKey, render, container, chipGroup, searchInput, sortSelect, searchKeys, sortOptions, tagChipGroup, tagDefs }
+    var state = { query: '', activeChip: 'Vše', activeTag: 'Vše', sort: opts.sortOptions[0].value };
 
     function apply() {
       var filtered = opts.items.filter(function (item) {
         var matchesChip = state.activeChip === 'Vše' || (item[opts.groupKey] || '').toLowerCase() === state.activeChip.toLowerCase();
+        var matchesTag = state.activeTag === 'Vše' || (Array.isArray(item.tags) && item.tags.some(function (t) {
+          return normalizeTag(t) === state.activeTag;
+        }));
         var matchesQuery = !state.query || opts.searchKeys.some(function (key) {
           return (item[key] || '').toString().toLowerCase().indexOf(state.query) !== -1;
         });
-        return matchesChip && matchesQuery;
+        return matchesChip && matchesTag && matchesQuery;
       });
 
       var sorter = opts.sortOptions.find(function (s) { return s.value === state.sort; });
@@ -251,6 +277,26 @@ do statického HTML (index, clanky, kupony, clanek).
           opts.chipGroup.querySelectorAll('.wtb-chip').forEach(function (c) { c.classList.remove('active'); });
           chip.classList.add('active');
           state.activeChip = chip.getAttribute('data-chip');
+          apply();
+        });
+      });
+    }
+
+    // Druhý, nezávislý řádek štítků: pevná sada "pro koho" (osoby), na rozdíl
+    // od chipGroup výše (kategorie) se negeneruje z dat, ale je vždy stejná -
+    // i tag, u kterého zatím není žádný článek, se má na výběr zobrazit.
+    if (opts.tagChipGroup && opts.tagDefs) {
+      var tagButtons = ['<button type="button" class="wtb-chip active" data-tag="Vše">Vše</button>'].concat(
+        opts.tagDefs.map(function (t) {
+          return '<button type="button" class="wtb-chip" data-tag="' + escapeHtml(t.slug) + '">' + escapeHtml(t.label) + '</button>';
+        })
+      );
+      opts.tagChipGroup.innerHTML = tagButtons.join('');
+      opts.tagChipGroup.querySelectorAll('.wtb-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          opts.tagChipGroup.querySelectorAll('.wtb-chip').forEach(function (c) { c.classList.remove('active'); });
+          chip.classList.add('active');
+          state.activeTag = chip.getAttribute('data-tag') === 'Vše' ? 'Vše' : normalizeTag(chip.getAttribute('data-tag'));
           apply();
         });
       });
@@ -334,6 +380,7 @@ do statického HTML (index, clanky, kupony, clanek).
     var grid = document.getElementById('article-grid');
     if (!grid) return;
     var chipGroup = document.getElementById('chip-group');
+    var tagChipGroup = document.getElementById('tag-chip-group');
     var sortSelect = document.getElementById('sort-select');
     var searchInput = document.getElementById('search-input');
 
@@ -343,6 +390,8 @@ do statického HTML (index, clanky, kupony, clanek).
         groupKey: 'category',
         searchKeys: ['title', 'excerpt', 'category', 'tags'],
         chipGroup: chipGroup,
+        tagChipGroup: tagChipGroup,
+        tagDefs: PERSON_TAGS,
         sortSelect: sortSelect,
         searchInput: searchInput,
         sortOptions: [
