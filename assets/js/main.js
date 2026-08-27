@@ -27,6 +27,7 @@ do statického HTML (index, clanky, kupony, clanek).
     { slug: 'kamaradi', label: 'Pro kamarády' },
     { slug: 'kolegove', label: 'Pro kolegy' },
     { slug: 'deti', label: 'Pro děti a miminka' },
+    { slug: 'mazlicci', label: 'Pro mazlíčky' },
   ];
 
   // ---------- Pomocné funkce ----------
