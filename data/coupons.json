@@ -1,5 +1,15 @@
 [
   {
+    "id": 1787824134003,
+    "brand": "Jabkolevně.cz",
+    "code": "sleva300",
+    "discount": "300",
+    "until": "2026-12-31",
+    "url": "https://ehub.cz/system/scripts/click.php?a_aid=293b3486&a_bid=85731c2c&desturl=https%3A%2F%2Fwww.jabkolevne.cz%2F",
+    "image": "",
+    "description": "Sleva 300 Kč"
+  },
+  {
     "id": 1787823908855,
     "brand": "Fajnspánek.cz",
     "code": "AF3652",
