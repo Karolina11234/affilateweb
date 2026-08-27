@@ -37,23 +37,40 @@ function pickColor(seed) {
 }
 
 // ---------- Fonty s podporou české diakritiky ----------
+// OPRAVA (odolnost generátoru obrázků): dřív každé volání této funkce dvakrát
+// zavolalo síť ven (Google Fonts CSS + samotné soubory fontů) BEZ časového
+// limitu a bez zachytávání chyby - když Google Fonts byl pomalý, nedostupný,
+// nebo vrátil neočekávaný formát, celá funkce spadla na chybu (throw) a
+// handler() pak vrátil místo obrázku obyčejnou textovou chybovou hlášku.
+// Jenže tuhle URL volají i sítě jako Pinterest/Facebook/Instagram, aby si
+// stáhly náhledovou fotku - a ty s textovou chybou místo obrázku neumí nic
+// udělat (typicky se to navenek projeví jako "nepodařilo se načíst/najít
+// obrázek", i když vlastní příčina byla jen dočasný výpadek Google Fonts).
+// Řešení: 8s časový limit na síťové volání + při jakékoli chybě vrátíme
+// prázdné pole (žádné vlastní soubory fontu) místo throw - obrázek se pak
+// vygeneruje dál, jen s výchozím systémovým fontem místo Fraunces/DM Sans.
 async function loadGoogleFont(family, weight, text) {
-  // Pozn.: Google Fonts API i s parametrem &text= (které omezuje font jen na použité znaky)
-  // umí vrátit VÍC než jeden @font-face blok najednou (typicky rozdělený podle rozsahu
-  // znaků - např. samostatně "latin" pro obyčejná písmena a samostatně "latin-ext" pro
-  // znaky s diakritikou). Dřív se bral jen PRVNÍ nalezený blok, takže se v části textu
-  // (třeba běžná velká písmena bez diakritiky) chybějící znaky nahradily záložním fontem -
-  // to je přesně ta nesourodá tloušťka písma. Teď se stáhnou VŠECHNY nalezené bloky a všechny
-  // se předají do ImageResponse jako samostatné zdroje téhož fontu/řezu - engine si pak
-  // pro každý znak sám vybere ten soubor, který ho skutečně obsahuje.
-  const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
-  const css = await (await fetch(cssUrl)).text();
-  const urls = [...css.matchAll(/src: url\(([^)]+)\)/g)].map((m) => m[1]);
-  if (!urls.length) throw new Error(`Nepodařilo se najít font ${family} v Google Fonts CSS.`);
-  return Promise.all(urls.map(async (url) => {
-    const fontRes = await fetch(url);
-    return await fontRes.arrayBuffer();
-  }));
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort('timeout'), 8000);
+    const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
+    const css = await (await fetch(cssUrl, { signal: controller.signal })).text();
+    const urls = [...css.matchAll(/src: url\(([^)]+)\)/g)].map((m) => m[1]);
+    if (!urls.length) {
+      clearTimeout(timeoutId);
+      return [];
+    }
+    const buffers = await Promise.all(urls.map(async (url) => {
+      const fontRes = await fetch(url, { signal: controller.signal });
+      return await fontRes.arrayBuffer();
+    }));
+    clearTimeout(timeoutId);
+    return buffers;
+  } catch (_) {
+    // Google Fonts nedostupný / timeout / neočekávaná odpověď - v pořádku,
+    // obrázek se vygeneruje dál se systémovým fontem místo úplného pádu.
+    return [];
+  }
 }
 
 export default async function handler(req) {
@@ -108,7 +125,18 @@ export default async function handler(req) {
       ...dmSansMediumBuffers.map((data) => ({ name: 'DM Sans', data, weight: 500, style: 'normal' })),
     ];
 
-    return new ImageResponse(jsx, { width, height, fonts });
+    // Cache hlavička: stejná URL (stejné title/image/category) se za den
+    // volá vícekrát - jednou z webu, jednou z generátoru náhledu pro FB/IG,
+    // případně opakovaně z Pinterestu při dalších pokusech. S touto hlavičkou
+    // si to Vercel/CDN mezi voláními samo uloží, takže se Google Fonts
+    // nemusí stahovat pokaždé znovu (méně síťových volání = méně příležitostí
+    // k selhání) a odpověď je navíc rychlejší.
+    return new ImageResponse(jsx, {
+      width,
+      height,
+      fonts,
+      headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=604800' },
+    });
   } catch (err) {
     return new Response(`Chyba generátoru obrázků: ${err.message}`, { status: 500 });
   }
