@@ -1,5 +1,15 @@
 [
   {
+    "id": 1787855708483,
+    "brand": "Fajnspánek.cz",
+    "code": "AF4587",
+    "discount": "0.04",
+    "until": "2031-12-31",
+    "url": "https://ehub.cz/system/scripts/click.php?a_aid=293b3486&a_bid=3242cea9&desturl=https%3A%2F%2Fwww.fajnspanek.cz%2F",
+    "image": "",
+    "description": "Sleva 4 % při nákupu nad 5 000 Kč"
+  },
+  {
     "id": 1787855469766,
     "brand": "Jabkolevně.cz",
     "code": "sleva300",
@@ -48,16 +58,6 @@
     "url": "https://ehub.cz/system/scripts/click.php?a_aid=293b3486&a_bid=3242cea9&desturl=https%3A%2F%2Fwww.fajnspanek.cz%2F",
     "image": "",
     "description": "Sleva 8 % při nákupu nad 20 000 Kč"
-  },
-  {
-    "id": 1787492838576,
-    "brand": "Fajnspánek.cz",
-    "code": "AF4587",
-    "discount": 0.04,
-    "until": "2031-12-31",
-    "url": "https://ehub.cz/system/scripts/click.php?a_aid=293b3486&a_bid=3242cea9&desturl=https%3A%2F%2Fwww.fajnspanek.cz%2F",
-    "image": "",
-    "description": "Sleva 4 % při nákupu nad 5 000 Kč"
   },
   {
     "id": 1787484608948,
