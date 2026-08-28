@@ -83,6 +83,35 @@ async function loadGoogleFont(family, weight, text) {
   }
 }
 
+// OPRAVA (Instagram karusel padal na "Only photo or video can be accepted as
+// media type" u některých snímků): tenhle generátor vkládá do obrázku i
+// fotku KONKRÉTNÍHO produktu z affiliate feedu (?image=...) - tahle URL ale
+// není pod naší kontrolou a občas je nedostupná (obchod ji smazal/přesunul,
+// blokuje stahování odjinud než ze svého webu apod.). Když se satori uvnitř
+// ImageResponse pokusí takovou fotku natáhnout a nepovede se to, celá funkce
+// dřív spadla do catch() níž a MÍSTO OBRÁZKU vrátila obyčejný text s chybou
+// (status 500) - a přesně tenhle text pak Instagram odmítl, protože to není
+// platná fotka ani video. Teď se každá fotka z query parametru nejdřív
+// ověří (rychlý fetch s časovým limitem) - když nejde stáhnout nebo to není
+// obrázek, chováme se, jako by se ?image vůbec neposlalo (karta se
+// vykreslí bez fotky, jen s textem) - výsledek je vždy platný obrázek.
+async function verifyImage(url) {
+  if (!url) return '';
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort('timeout'), 5000);
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) return '';
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.startsWith('image/')) return '';
+    return url;
+  } catch (_) {
+    // Nedostupná/vypršelá/zablokovaná fotka - v pořádku, vykreslí se karta beze fotky.
+    return '';
+  }
+}
+
 export default async function handler(req) {
   try {
     const { searchParams } = new URL(req.url);
@@ -92,7 +121,7 @@ export default async function handler(req) {
     const obchod = searchParams.get('obchod');
     const popis = searchParams.get('popis') || '';
     const category = searchParams.get('category') || searchParams.get('kategorie') || '';
-    const image = searchParams.get('image') || '';
+    const image = await verifyImage(searchParams.get('image') || '');
     const ratio = searchParams.get('ratio') || searchParams.get('format') || '';
 
     let jsx;
